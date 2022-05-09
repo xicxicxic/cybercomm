@@ -112,6 +112,7 @@ class App extends React.Component<{}, IAppState> {
             <TeamsThemeContext.Provider value={context}>
                 <Suspense fallback={<div></div>}>
                     <div className="appContainer">
+                        <h1>Hello!</h1>
                         <BrowserRouter>
                             <Switch>
                                 <Route exact path="/configtab" component={Configuration} />
