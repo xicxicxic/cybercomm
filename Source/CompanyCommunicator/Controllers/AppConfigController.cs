@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
+using Microsoft.Teams.Apps.CompanyCommunicator.Models;
 
 namespace Microsoft.Teams.Apps.CompanyCommunicator.Controllers
 {
@@ -45,11 +46,14 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Controllers
             }
             return result;
         }
+
         [HttpPut]
         public async Task<IActionResult> UpdateAppConfigAsync([FromBody] AppConfigEntity config)
         {
             if (config == null)
-            { throw new ArgumentNullException(nameof(AppConfigEntity)); }
+            {
+                throw new ArgumentNullException(nameof(AppConfigEntity));
+            }
 
             var configEntity = new AppConfigEntity
             {

@@ -22,7 +22,7 @@ class Configuration extends React.Component<{}, IConfigState> {
 
         microsoftTeams.settings.registerOnSaveHandler((saveEvent) => {
             microsoftTeams.settings.setSettings({
-                entityId: "Company_Communicator_App",
+                entityId: "CyberCommApp",
                 contentUrl: this.state.url,
                 suggestedDisplayName: "CyberComm",
             });

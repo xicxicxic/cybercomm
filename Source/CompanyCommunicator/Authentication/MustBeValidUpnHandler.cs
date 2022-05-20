@@ -3,8 +3,6 @@
 // Licensed under the MIT License.
 // </copyright>
 
-
-
 namespace Microsoft.Teams.Apps.CompanyCommunicator.Authentication
 {
     using System;
@@ -15,19 +13,14 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Authentication
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.Extensions.Options;
 
-
-
     /// <summary>
     /// This class is an authorization handler, which handles the authorization requirement.
     /// </summary>
     public class MustBeValidUpnHandler : AuthorizationHandler<MustBeValidUpnRequirement>
     {
-        private const string CLAIM_ROLES = "roles";
         private readonly bool disableCreatorUpnCheck;
         private readonly string authorizedRole;
         private readonly HashSet<string> authorizedCreatorUpnsSet;
-
-
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MustBeValidUpnHandler"/> class.
@@ -39,13 +32,11 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Authentication
             this.authorizedRole = authenticationOptions.Value.AuthorizedRole;
             var authorizedCreatorUpns = authenticationOptions.Value.AuthorizedCreatorUpns;
             this.authorizedCreatorUpnsSet = authorizedCreatorUpns
-            ?.Split(new char[] { ';', ',' }, StringSplitOptions.RemoveEmptyEntries)
-            ?.Select(p => p.Trim())
-            ?.ToHashSet()
-            ?? new HashSet<string>();
+                ?.Split(new char[] { ';', ',' }, StringSplitOptions.RemoveEmptyEntries)
+                ?.Select(p => p.Trim())
+                ?.ToHashSet()
+                ?? new HashSet<string>();
         }
-
-
 
         /// <summary>
         /// This method handles the authorization requirement.
@@ -54,20 +45,16 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Authentication
         /// <param name="requirement">IAuthorizationRequirement instance.</param>
         /// <returns>A task that represents the work queued to execute.</returns>
         protected override Task HandleRequirementAsync(
-        AuthorizationHandlerContext context,
-        MustBeValidUpnRequirement requirement)
+            AuthorizationHandlerContext context,
+            MustBeValidUpnRequirement requirement)
         {
             if (this.disableCreatorUpnCheck || this.IsValidUpn(context) || this.HasValidRole(context))
             {
                 context.Succeed(requirement);
             }
 
-
-
             return Task.CompletedTask;
         }
-
-
 
         /// <summary>
         /// Check whether a upn is valid or not.
@@ -84,12 +71,8 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Authentication
                 return false;
             }
 
-
-
             return this.authorizedCreatorUpnsSet.Contains(upn, StringComparer.OrdinalIgnoreCase);
         }
-
-
 
         /// <summary>
         /// Check whether a role is a valid authorized role or not.
@@ -98,12 +81,9 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Authentication
         /// <returns>Indicate if a role is valid or not.</returns>
         private bool HasValidRole(AuthorizationHandlerContext context)
         {
-            var claim = context.User?.Claims?.FirstOrDefault(p => p.Type.Equals(CLAIM_ROLES));
-            var role = claim?.Value;
+            var claim = context.User?.Claims?.FirstOrDefault(p => p.Type == ClaimTypes.Role);
 
-
-
-            return role?.Equals(this.authorizedRole) == true;
+            return claim?.Value?.Equals(this.authorizedRole) == true;
         }
     }
 }

@@ -29,6 +29,7 @@ export interface ITaskInfoProps extends WithTranslation {
 
 export interface ITabContainerState {
     url: string;
+    settings:string;
 }
 
 class TabContainer extends React.Component<ITaskInfoProps, ITabContainerState> {
@@ -37,7 +38,8 @@ class TabContainer extends React.Component<ITaskInfoProps, ITabContainerState> {
         super(props);
         this.localize = this.props.t;
         this.state = {
-            url: getBaseUrl() + "/newmessage?locale={locale}"
+            url: getBaseUrl() + "/newmessage?locale={locale}",
+            settings: getBaseUrl() + "/settings?locale={locale}"
         }
         this.escFunction = this.escFunction.bind(this);
     }
@@ -89,18 +91,33 @@ class TabContainer extends React.Component<ITaskInfoProps, ITabContainerState> {
                         <Accordion defaultActiveIndex={[0, 1]} panels={panels} />
                     </Flex.Item>
                 </Flex>
+                <Flex><Button content={this.localize("Settings")} onClick={this.onSettings} primary /></Flex>
             </Flex>
         );
     }
 
     public onNewMessage = () => {
-     
         let taskInfo: ITaskInfo = {
             url: this.state.url,
             title: this.localize("NewMessage"),
             height: 530,
             width: 1000,
             fallbackUrl: this.state.url,
+        }
+
+        let submitHandler = (err: any, result: any) => {
+            this.props.getDraftMessagesList();
+        };
+
+        microsoftTeams.tasks.startTask(taskInfo, submitHandler);
+    }
+    public onSettings = () => {
+        let taskInfo: ITaskInfo = {
+            url: this.state.settings,
+            title: this.localize("Settings"),
+            height: 530,
+            width: 600,
+            fallbackUrl: this.state.settings,
         }
 
         let submitHandler = (err: any, result: any) => {
