@@ -24,7 +24,7 @@ class Configuration extends React.Component<{}, IConfigState> {
             microsoftTeams.settings.setSettings({
                 entityId: "Company_Communicator_App",
                 contentUrl: this.state.url,
-                suggestedDisplayName: "Company Communicator",
+                suggestedDisplayName: "CyberComm",
             });
             saveEvent.notifySuccess();
         });

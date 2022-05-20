@@ -3,6 +3,9 @@
 // Licensed under the MIT License.
 // </copyright>
 
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
 namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories
 {
     /// <summary>
@@ -10,5 +13,10 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories
     /// </summary>
     public interface IAppConfigRepository : IRepository<AppConfigEntity>
     {
+        Task<IEnumerable<AppConfigEntity>> GetAllAppConfigAsync();
+
+        Task UpdateAppConfigAsync(string appConfigId);
     }
+    
+
 }

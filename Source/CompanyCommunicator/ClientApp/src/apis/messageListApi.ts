@@ -96,3 +96,14 @@ export const getAuthenticationConsentMetadata = async (windowLocationOriginDomai
     let url = `${baseAxiosUrl}/authenticationMetadata/consentUrl?windowLocationOriginDomain=${windowLocationOriginDomain}&loginhint=${login_hint}`;
     return await axios.get(url, undefined, false);
 }
+
+
+export const getAppConfig = async (): Promise<any> => {
+    let url = baseAxiosUrl + "/appconfig";
+    return await axios.get(url);
+}
+
+export const updateAppConfig = async (payload: {}): Promise<any> => {
+    let url = baseAxiosUrl + "/appconfig";
+    return await axios.put(url, payload);
+}

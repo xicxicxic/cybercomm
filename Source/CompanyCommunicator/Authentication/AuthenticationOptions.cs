@@ -46,5 +46,10 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Authentication
         /// create notifications.
         /// </summary>
         public string AuthorizedCreatorUpns { get; set; }
+
+        /// <summary>
+        /// Gets or sets the valid authorized role
+        /// </summary>
+        public string AuthorizedRole { get; set; }
     }
 }

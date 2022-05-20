@@ -194,6 +194,15 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator
             services.AddTransient<IUserDataService, UserDataService>();
             services.AddTransient<ITeamMembersService, TeamMembersService>();
             services.AddTransient<ICCBotFrameworkHttpAdapter, CCBotFrameworkHttpAdapter>();
+
+            /*services.AddCors(options =>
+            {
+                options.AddPolicy(name: "MyAllowSpecificOrigins",
+                                  policy =>
+                                  {
+                                      policy.AllowAnyOrigin();
+                                  });
+            });*/
         }
 
         /// <summary>
@@ -208,6 +217,8 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
+
+            //app.UseCors("MyAllowSpecificOrigins");
 
             app.UseRouting();
             app.UseAuthentication();
@@ -254,6 +265,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator
 
             authenticationOptions.DisableCreatorUpnCheck = configuration.GetValue<bool>("DisableCreatorUpnCheck", false);
             authenticationOptions.AuthorizedCreatorUpns = configuration.GetValue<string>("AuthorizedCreatorUpns");
+            authenticationOptions.AuthorizedRole = configuration.GetValue<string>("AuthorizedRole");
         }
 
         /// <summary>

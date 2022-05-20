@@ -94,6 +94,7 @@ class TabContainer extends React.Component<ITaskInfoProps, ITabContainerState> {
     }
 
     public onNewMessage = () => {
+     
         let taskInfo: ITaskInfo = {
             url: this.state.url,
             title: this.localize("NewMessage"),
