@@ -111,6 +111,16 @@ export const getFeeds = async (): Promise<any> => {
 export const createFeed = async (payload: {}): Promise<any> => {
     let url = baseAxiosUrl + "/feedData";
     return await axios.post(url, payload);
+};
+
+export const updateFeed = async (payload: {}): Promise<any> => {
+    let url = baseAxiosUrl + "/feedData";
+    return await axios.put(url, payload);
+};
+
+export const deleteFeed = async (id: number): Promise<any> => {
+    let url = baseAxiosUrl + "/feedData/" + id;
+    return await axios.delete(url);
 }
 
 export const getAuthenticationConsentMetadata = async (windowLocationOriginDomain: string, login_hint: string): Promise<any> => {

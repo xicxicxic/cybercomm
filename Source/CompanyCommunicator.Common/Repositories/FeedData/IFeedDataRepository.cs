@@ -13,8 +13,18 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories
     /// </summary>
     public interface IFeedDataRepository : IRepository<FeedDataEntity>
     {
+        /// <summary>
+        /// Gets table row key generator.
+        /// </summary>
+        public TableRowKeyGenerator TableRowKeyGenerator { get; }
+
         Task<IEnumerable<FeedDataEntity>> GetAllFeedDataAsync();
 
-        Task CreateFeedDataAsync(string appConfigId);
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="feedData">feedData</param>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        Task CreateFeedDataAsync(FeedDataEntity feedData);
     }
 }

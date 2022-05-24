@@ -11,6 +11,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories
     using Microsoft.Extensions.Options;
     using Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories;
     using Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories.NotificationData;
+    using System;
 
     /// <summary>
     /// App configuration repository.
@@ -22,9 +23,11 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories
         /// </summary>
         /// <param name="logger">The logging service.</param>
         /// <param name="repositoryOptions">Options used to create the repository.</param>
+        /// <param name="tableRowKeyGenerator"></param>
         public FeedDataRepository(
             ILogger<FeedDataRepository> logger,
-            IOptions<RepositoryOptions> repositoryOptions)
+            IOptions<RepositoryOptions> repositoryOptions,
+            TableRowKeyGenerator tableRowKeyGenerator)
             : base(
                   logger,
                   storageAccountConnectionString: repositoryOptions.Value.StorageAccountConnectionString,
@@ -32,7 +35,11 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories
                   defaultPartitionKey: FeedDataTableName.FeedPartition,
                   ensureTableExists: repositoryOptions.Value.EnsureTableExists)
         {
+            this.TableRowKeyGenerator = tableRowKeyGenerator;
         }
+
+
+        public TableRowKeyGenerator TableRowKeyGenerator { get; }
 
         /// <summary>
         /// Gets all the App config files in the table.
@@ -48,15 +55,32 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories
         /// <summary>
         /// Updates a app config file.
         /// </summary>
-        /// <param name="appConfigId">Id from the config to be updated.</param>
+        /// <param name="feedDataId"></param>
         /// <returns>Task</returns>
-        public async Task CreateFeedDataAsync(string appConfigId)
+        public async Task CreateFeedDataAsync(FeedDataEntity feedData)
         {
-            var appConfigEntity = await this.GetAsync(AppConfigTableName.SettingsPartition, appConfigId);
-
-            if (appConfigEntity != null)
+            try
             {
-                await this.CreateOrUpdateAsync(appConfigEntity);
+                if (feedData == null)
+                {
+                    throw new ArgumentNullException(nameof(feedData));
+                }
+
+                var newDataFeedId = this.TableRowKeyGenerator.CreateNewKeyOrderingMostRecentToOldest();
+
+                // Create a sent notification based on the draft notification.
+                var feedDataEntity = new FeedDataEntity
+                {
+                    PartitionKey = feedData.PartitionKey,
+                    RowKey = newDataFeedId,
+                    Value = feedData.Value,
+                };
+                await this.CreateOrUpdateAsync(feedDataEntity);
+            }
+            catch (Exception ex)
+            {
+                this.Logger.LogError(ex, ex.Message);
+                throw;
             }
         }
     }

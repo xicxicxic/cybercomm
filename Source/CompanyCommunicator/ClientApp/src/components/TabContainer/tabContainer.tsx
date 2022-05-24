@@ -8,10 +8,11 @@ import DraftMessages from '../DraftMessages/draftMessages';
 import './tabContainer.scss';
 import * as microsoftTeams from "@microsoft/teams-js";
 import { getBaseUrl } from '../../configVariables';
-import { Accordion, Button, Flex } from '@fluentui/react-northstar';
+import { Accordion, Button, Flex, Image, Text } from '@fluentui/react-northstar';
 import { getDraftMessagesList } from '../../actions';
 import { connect } from 'react-redux';
 import { TFunction } from "i18next";
+import ImageLogo from './color.png';
 
 interface ITaskInfo {
     title?: string;
@@ -83,15 +84,16 @@ class TabContainer extends React.Component<ITaskInfoProps, ITabContainerState> {
         ]
         return (
             <Flex className="tabContainer" column fill gap="gap.small">
-                <Flex className="newPostBtn" hAlign="end" vAlign="end">
-                    <Button content={this.localize("NewMessage")} onClick={this.onNewMessage} primary />
+                <Flex><Image className='imgLogo' src={ImageLogo}></Image><Text className='imgLogo' content="CyberComm by Devscope"></Text></Flex>
+                <Flex className="newPostContainer" hAlign="end" vAlign="end">
+                    <Button className="newPostBtn" content={this.localize("NewMessage")} onClick={this.onNewMessage} primary />
+                    <Button className="newPostBtn" content={this.localize("Settings")} onClick={this.onSettings} primary />
                 </Flex>
                 <Flex className="messageContainer">
                     <Flex.Item grow={1} >
                         <Accordion defaultActiveIndex={[0, 1]} panels={panels} />
                     </Flex.Item>
                 </Flex>
-                <Flex><Button content={this.localize("Settings")} onClick={this.onSettings} primary /></Flex>
             </Flex>
         );
     }

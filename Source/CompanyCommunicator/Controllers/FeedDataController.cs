@@ -26,6 +26,10 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Controllers
             this.feedDataRepository = feedDataRepository ?? throw new ArgumentNullException(nameof(feedDataRepository));
         }
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<FeedDataEntity>>> GetAllFeedDataAsync()
         {
@@ -60,11 +64,60 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Controllers
             {
                 Value = feed.Value,
                 PartitionKey = feed.PartitionKey,
+            };
+
+            await this.feedDataRepository.CreateFeedDataAsync(feedEntity);
+
+            return this.Ok();
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="feed">Feed</param>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        [HttpPut]
+        public async Task<IActionResult> UpdateFeedDataAsync([FromBody] FeedDataEntity feed)
+        {
+            if (feed == null)
+            {
+                throw new ArgumentNullException(nameof(FeedDataEntity));
+            }
+
+            var feedEntity = new FeedDataEntity
+            {
+                Value = feed.Value,
+                PartitionKey = feed.PartitionKey,
                 RowKey = feed.RowKey,
             };
 
             await this.feedDataRepository.CreateOrUpdateAsync(feedEntity);
 
+            return this.Ok();
+        }
+
+        /// <summary>
+        /// Delete an existing draft notification.
+        /// </summary>
+        /// <param name="id">The id of the draft notification to be deleted.</param>
+        /// <returns>If the passed in Id is invalid, it returns 404 not found error. Otherwise, it returns 200 OK.</returns>
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteFeedDataAsync(string id)
+        {
+            if (id == null)
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+
+            var feedDataEntity = await this.feedDataRepository.GetAsync(
+                FeedDataTableName.FeedPartition,
+                id);
+            if (feedDataEntity == null)
+            {
+                return this.NotFound();
+            }
+
+            await this.feedDataRepository.DeleteAsync(feedDataEntity);
             return this.Ok();
         }
     }
