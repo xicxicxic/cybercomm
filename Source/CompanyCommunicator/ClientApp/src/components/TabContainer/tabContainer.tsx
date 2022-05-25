@@ -22,7 +22,7 @@ interface ITaskInfo {
     card?: string;
     fallbackUrl?: string;
     completionBotId?: string;
-}
+} 
 
 export interface ITaskInfoProps extends WithTranslation {
     getDraftMessagesList?: any;
