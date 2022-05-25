@@ -1,4 +1,37 @@
 .deleteBtn{
     min-width: 0px;
-        width: 20px;
-    }
+    width: 20px;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.itemsContainer{
+    margin-bottom: 5px;
+}
+
+.inputFeed{
+    width: 100% !important;
+    margin-left: 5px;
+    box-sizing: 300;
+    
+}
+
+.title{
+    margin-bottom: 5px;
+    margin-left: 5px;
+    margin-top: 5px;
+}
+
+.addBtn{
+    min-width: 0px !important;
+    width: 70px !important;
+    margin-left: 5px;
+    margin-bottom: 20px;
+    margin-top: 10px;
+}
+
+.saveBtn{
+    min-width: 0px !important;
+    width: 75px !important;
+    margin-left: 5px;
+}

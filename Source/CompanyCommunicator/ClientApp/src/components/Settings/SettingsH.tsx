@@ -58,21 +58,19 @@ function SettingsH(props: ISettingsProps) {
     getCncsNewsObj.value = getCncsNews.toString();
     updateSettings(askAuthObj);
     updateSettings(getCncsNewsObj);
-    debugger;
-    feedsList && feedsList.forEach(feed => {debugger;
-      if(feed.rowKey == null){
+    feedsList && feedsList.forEach(feed => {
+      if(feed.rowKey == ""){
         createFeed(feed);}
         else{
           updateFeed(feed);}});
-    feedsToDeleteList && feedsToDeleteList.forEach(feed => deleteFeed(feed.rowKey));
+    feedsToDeleteList && feedsToDeleteList.filter(feed => feed.rowKey != "").forEach(feed => deleteFeed(feed.rowKey));
     microsoftTeams.tasks.submitTask();
   }
 
   function handleChange(event: any, index: number) { 
-    debugger;
     if(feedsList){
       feedsList[index].value = event.target.value;
-      setFeedsList(feedsList);
+      setFeedsList([...feedsList]);
     }
   }
 
@@ -84,17 +82,9 @@ function SettingsH(props: ISettingsProps) {
     }
   }
 
-  function deleteHandler(id: any) { 
-    if(feedsList && feedsToDeleteList){
-      feedsList.forEach(feed => {if(feed.rowKey == id){feedsToDeleteList.push(feed)}});
-      setFeedsList([...feedsList.filter(feed => feed.rowKey !== id)]);
-      setfeedsToDeleteList([...feedsToDeleteList]);
-    }
-  }
 
-  function deleteHandler2(index: number) { 
+  function deleteHandler(index: number) { 
     if(feedsList && feedsToDeleteList){
-      debugger;
       feedsToDeleteList.push(feedsList[index]);
       setFeedsList([...feedsList.filter(feed => feed != feedsList[index])]);
       setfeedsToDeleteList([...feedsToDeleteList]);
@@ -160,7 +150,7 @@ console.log(feedsList)
     return (
       <Flex className="container" column>
         <Flex className="boxContainer" column>
-          <Text content = "Feed Settings"></Text>
+          <Text weight="bold" className="title" content = "Feed Settings"></Text>
           <Checkbox
             label="Ask for authorization"
             checked={askAuth}
@@ -177,14 +167,14 @@ console.log(feedsList)
               setGetCncsNews(!getCncsNews);
             }}
           ></Checkbox>
-          <Text content = "Feeds List"></Text>
-          {feedsList && feedsList.map((feed : FeedItem, index: number)=> <Flex> <Input type="text" defaultValue={feed.value} onChange = {(e:any)=>  handleChange(e, index) }> </Input>
-          <Button iconOnly className="deleteBtn" icon={<TrashCanIcon />} primary onClick={()=> {deleteHandler2(index) }}></Button> 
+          <Text weight="bold" className="title" content = "Feeds List"></Text>
+          {feedsList && feedsList.map((feed : FeedItem, index: number)=> <Flex className="itemsContainer"> <Input fluid className="inputFeed" type="text" value={feed.value} onChange = {(e:any)=>  handleChange(e, index) }> </Input>
+          <Button iconOnly className="deleteBtn" icon={<TrashCanIcon />} primary onClick={()=> {deleteHandler(index) }}></Button> 
           </Flex>)}
-          <Button content="Add" primary  onClick={()=>  addHandler()}></Button>
+          <Button className="addBtn" content="Add" primary  onClick={()=>  addHandler()}></Button>
         </Flex>
         
-        <Button primary content="Save" onClick={saveHandler}></Button>
+        <Button className="saveBtn" primary content="Save" onClick={saveHandler}></Button>
       </Flex>
     );
   //}
