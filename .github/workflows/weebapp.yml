@@ -8,7 +8,8 @@ on:
 env:
   AZURE_WEBAPP_NAME: CyberCommV5  # set this to your application's name
   AZURE_WEBAPP_PACKAGE_PATH: 'Source/CompanyCommunicator'    # set this to the path to your web app project, defaults to the repository root
-  
+  DOTNET_VERSION: '3.1'              # set this to the dotnet version to use
+
 jobs:
   build:
 
@@ -19,7 +20,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v2
       with:
-        dotnet-version: 3.0.x
+        dotnet-version: ${{ env.DOTNET_VERSION }}
     - name: dotnet build and publish
       run: |
         pushd './${{ env.AZURE_WEBAPP_PACKAGE_PATH }}'
