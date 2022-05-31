@@ -1,7 +1,10 @@
 name: Deploy DotNet project to function app with a Windows environment 
 
 on:
-  [push]
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
 
 env:
   AZURE_FUNCTIONAPP_NAME: CyberCommV5-data-function  # set this to your application's name
