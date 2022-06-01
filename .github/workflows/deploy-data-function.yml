@@ -18,31 +18,12 @@ jobs:
     - name: 'Checkout GitHub Action'
       uses: actions/checkout@v2
 
-    - name: Setup DotNet ${{ env.DOTNET_VERSION }} Environment
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: ${{ env.DOTNET_VERSION }}
-
-    - name: 'Resolve Project Dependencies Using Dotnet'
-      shell: pwsh
-      run: |
-        pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
-        dotnet build --configuration Release --output ./output
-        popd
-        
-    - name: Archive production artifacts
-      uses: actions/upload-artifact@v3
-      with:
-        name: dist-without-markdown
-        path: |
-           ./${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/output
-            
     - name: 'Run Azure Functions Action'
       uses: Azure/functions-action@v1
       id: fa
       with:
         app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
-        package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/output
-        publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
+        package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+f        publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
     
    
