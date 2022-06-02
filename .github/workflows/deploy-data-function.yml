@@ -7,6 +7,10 @@ on:
     branches: [ master ]
 
 env:
+
+  AZURE_WEBAPP_NAME: cybercommv6  # set this to your application's name
+  AZURE_WEBAPP_PACKAGE_PATH: 'Source/CompanyCommunicator'
+  
   AZURE_FUNCTIONAPP_DATA_NAME: cybercommv6-data-function  # set this to your application's name
   AZURE_FUNCTIONAPP_DATA_PACKAGE_PATH: 'Source/CompanyCommunicator.Data.Func'    # set this to the path to your web app project, defaults to the repository root
   
