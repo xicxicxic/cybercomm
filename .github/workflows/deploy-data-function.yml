@@ -7,12 +7,32 @@ on:
     branches: [ master ]
 
 env:
-  AZURE_FUNCTIONAPP_NAME: cybercommv6-data-function  # set this to your application's name
-  AZURE_FUNCTIONAPP_PACKAGE_PATH: 'Source/CompanyCommunicator.Data.Func'    # set this to the path to your web app project, defaults to the repository root
+  AZURE_FUNCTIONAPP_DATA_NAME: cybercommv6-data-function  # set this to your application's name
+  AZURE_FUNCTIONAPP_DATA_PACKAGE_PATH: 'Source/CompanyCommunicator.Data.Func'    # set this to the path to your web app project, defaults to the repository root
+  
+  AZURE_FUNCTIONAPP_NAME: cybercommv6-function  # set this to your application's name
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: 'Source/CompanyCommunicator.Send.Func'    # set this to the path to your web app project, defaults to the repository root
+  
+  AZURE_FUNCTIONAPP_PREP_NAME: cybercommv6-prep-function  # set this to your application's name
+  AZURE_FUNCTIONAPP_PREP_PACKAGE_PATH: 'Source/CompanyCommunicator.Prep.Func'    # set this to the path to your web app project, defaults to the repository root
   DOTNET_VERSION: '3.1'              # set this to the dotnet version to use
 
 jobs:
-  build-and-deploy:
+  build-and-deploy-function-data:
+    runs-on: windows-latest
+    steps:
+    - name: 'Checkout GitHub Action'
+      uses: actions/checkout@v2
+
+    - name: 'Run Azure Functions Action'
+      uses: Azure/functions-action@v1
+      id: fa
+      with:
+        app-name: ${{ env.AZURE_FUNCTIONAPP_DATA_NAME }}
+        package: ${{ env.AZURE_FUNCTIONAPP_DATA_PACKAGE_PATH }}
+        publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_DATA_PUBLISH_PROFILE }}
+        
+  build-and-deploy-function:
     runs-on: windows-latest
     steps:
     - name: 'Checkout GitHub Action'
@@ -24,6 +44,21 @@ jobs:
       with:
         app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
         package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
-        publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
+        publish-profile: ${{ secrets.AZURE_FUNCTION_APP_PUBLISH_PROFILE }}
+        
+        
+  build-and-deploy-function-prep:
+    runs-on: windows-latest
+    steps:
+    - name: 'Checkout GitHub Action'
+      uses: actions/checkout@v2
+
+    - name: 'Run Azure Functions Action'
+      uses: Azure/functions-action@v1
+      id: fa
+      with:
+        app-name: ${{ env.AZURE_FUNCTIONAPP_PREP_NAME }}
+        package: ${{ env.AZURE_FUNCTIONAPP_PREP_PACKAGE_PATH }}
+        publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PREP_PUBLISH_PROFILE }}
     
    
