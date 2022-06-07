@@ -43,7 +43,9 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Controllers
                     Value = feedEntity.Value,
                     PartitionKey = feedEntity.PartitionKey,
                     RowKey = feedEntity.RowKey,
-
+                    AskAuth = feedEntity.AskAuth,
+                    DailyNotifications = feedEntity.DailyNotifications,
+                    Title = feedEntity.Title,
                 };
 
                 result.Add(feed);
@@ -64,6 +66,9 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Controllers
             {
                 Value = feed.Value,
                 PartitionKey = feed.PartitionKey,
+                AskAuth = feed.AskAuth,
+                DailyNotifications = feed.DailyNotifications,
+                Title = feed.Title,
             };
 
             await this.feedDataRepository.CreateFeedDataAsync(feedEntity);
@@ -89,6 +94,9 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Controllers
                 Value = feed.Value,
                 PartitionKey = feed.PartitionKey,
                 RowKey = feed.RowKey,
+                AskAuth = feed.AskAuth,
+                DailyNotifications = feed.DailyNotifications,
+                Title = feed.Title,
             };
 
             await this.feedDataRepository.CreateOrUpdateAsync(feedEntity);

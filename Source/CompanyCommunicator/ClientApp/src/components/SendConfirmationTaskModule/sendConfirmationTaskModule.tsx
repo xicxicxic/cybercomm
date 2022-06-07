@@ -14,6 +14,7 @@ import {
     getInitAdaptiveCard, setCardTitle, setCardImageLink, setCardSummary,
     setCardAuthor, setCardBtn
 } from '../AdaptiveCard/adaptiveCard';
+import { getBaseUrl } from '../../configVariables';
 import { ImageUtil } from '../../utility/imageutility';
 import { TFunction } from "i18next";
 
@@ -21,6 +22,7 @@ export interface IListItem {
     header: string,
     media: JSX.Element,
 }
+
 
 export interface IMessage {
     id: string;
@@ -162,6 +164,7 @@ class SendConfirmationTaskModule extends React.Component<SendConfirmationTaskMod
                                 <Flex.Item push>
                                     <Loader id="sendingLoader" className="hiddenLoader sendingLoader" size="smallest" label={this.localize("PreparingMessageLabel")} labelPosition="end" />
                                 </Flex.Item>
+                                
                                 <Button content={this.localize("Send")} id="sendBtn" onClick={this.onSendMessage} primary />
                             </Flex>
                         </Flex>
@@ -178,6 +181,7 @@ class SendConfirmationTaskModule extends React.Component<SendConfirmationTaskMod
             microsoftTeams.tasks.submitTask();
         });
     }
+
 
     private getItemList = (items: string[]) => {
         let resultedTeams: IListItem[] = [];

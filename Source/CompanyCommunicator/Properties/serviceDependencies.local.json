@@ -1,15 +1,9 @@
 {
   "dependencies": {
-    "secrets1": {
-      "secretStore": null,
-      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.KeyVault/vaults/cybercommpocvault",
-      "type": "secrets.keyVault",
-      "connectionId": "VaultUri"
-    },
     "compute.appService1": {
       "secretStore": null,
       "group": "connections",
-      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Web/sites/cybercommpoc",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Web/sites/CyberCommV5",
       "type": "compute.appService.windows",
       "connectionId": null
     }

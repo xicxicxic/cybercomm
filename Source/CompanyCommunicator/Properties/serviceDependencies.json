@@ -1,9 +1,5 @@
 {
   "dependencies": {
-    "secrets1": {
-      "type": "secrets",
-      "connectionId": "VaultUri"
-    },
     "compute.appService1": {
       "group": "connections",
       "type": "compute.appService",

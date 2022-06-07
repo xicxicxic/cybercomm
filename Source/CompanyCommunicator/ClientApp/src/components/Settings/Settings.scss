@@ -16,22 +16,53 @@
     
 }
 
+.feedTitle{
+    width: 90px !important;
+    margin-left: 15px;
+}
+
+.feedTitleInput{
+    width: 150px !important;
+    margin-left: 5px;
+}
+
+.valueFeedInput{
+    width: 100px !important;
+    margin-left: 5px;
+}
+
 .title{
-    margin-bottom: 5px;
     margin-left: 5px;
     margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.textDescription{
+    margin-left: 5px;
+}
+
+.titleLink{
+    width: 55% !important;
+}
+
+.titleToggle{
+    width: 12% !important;
+}
+
+.onToggle{
+    width: 12% !important;
 }
 
 .addBtn{
     min-width: 0px !important;
-    width: 70px !important;
-    margin-left: 5px;
-    margin-bottom: 20px;
+    width: 110px !important;
+    margin-right: 5px;
+    margin-bottom: 5px;
     margin-top: 10px;
 }
 
 .saveBtn{
     min-width: 0px !important;
-    width: 75px !important;
+    width: 175px !important;
     margin-left: 5px;
 }

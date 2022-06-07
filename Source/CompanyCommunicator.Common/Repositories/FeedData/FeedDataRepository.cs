@@ -74,6 +74,9 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories
                     PartitionKey = feedData.PartitionKey,
                     RowKey = newDataFeedId,
                     Value = feedData.Value,
+                    AskAuth = feedData.AskAuth,
+                    DailyNotifications = feedData.DailyNotifications,
+                    Title = feedData.Title,
                 };
                 await this.CreateOrUpdateAsync(feedDataEntity);
             }

@@ -17,6 +17,10 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories
         /// </summary>
         public string Value { get; set; }
 
+        public string Title { get; set; }
 
+        public bool AskAuth { get; set; }
+
+        public bool DailyNotifications { get; set; }
     }
 }
