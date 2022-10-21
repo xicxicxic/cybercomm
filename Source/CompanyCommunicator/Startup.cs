@@ -22,6 +22,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator
     using Microsoft.Teams.Apps.CompanyCommunicator.Authentication;
     using Microsoft.Teams.Apps.CompanyCommunicator.Bot;
     using Microsoft.Teams.Apps.CompanyCommunicator.Common.Adapter;
+    using Microsoft.Teams.Apps.CompanyCommunicator.Common.Clients;
     using Microsoft.Teams.Apps.CompanyCommunicator.Common.Extensions;
     using Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories;
     using Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories.ExportData;
@@ -32,6 +33,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator
     using Microsoft.Teams.Apps.CompanyCommunicator.Common.Secrets;
     using Microsoft.Teams.Apps.CompanyCommunicator.Common.Services;
     using Microsoft.Teams.Apps.CompanyCommunicator.Common.Services.AdaptiveCard;
+    using Microsoft.Teams.Apps.CompanyCommunicator.Common.Services.Blob;
     using Microsoft.Teams.Apps.CompanyCommunicator.Common.Services.CommonBot;
     using Microsoft.Teams.Apps.CompanyCommunicator.Common.Services.MessageQueues.DataQueue;
     using Microsoft.Teams.Apps.CompanyCommunicator.Common.Services.MessageQueues.ExportQueue;
@@ -166,6 +168,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator
             services.AddSingleton<IExportDataRepository, ExportDataRepository>();
             services.AddSingleton<IAppConfigRepository, AppConfigRepository>();
             services.AddSingleton<IFeedDataRepository, FeedDataRepository>();
+            services.AddSingleton<ISendingNotificationDataRepository, SendingNotificationDataRepository>();
 
             // Add service bus message queues.
             services.AddSingleton<IPrepareToSendQueue, PrepareToSendQueue>();
@@ -204,6 +207,8 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator
                                       policy.AllowAnyOrigin();
                                   });
             });*/
+            services.AddTransient<IStorageClientFactory, StorageClientFactory>();
+            services.AddTransient<IBlobStorageProvider, BlobStorageProvider>();
         }
 
         /// <summary>

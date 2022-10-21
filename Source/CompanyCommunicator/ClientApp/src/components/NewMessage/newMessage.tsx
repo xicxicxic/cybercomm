@@ -40,6 +40,10 @@ import {
 import { getBaseUrl } from "../../configVariables";
 import { ImageUtil } from "../../utility/imageutility";
 import { TFunction } from "i18next";
+import { Icon, TooltipHost } from 'office-ui-fabric-react';
+
+const validImageTypes = ['image/gif', 'image/jpeg', 'image/png','image/jpg'];
+
 
 type dropdownItem = {
   key: string;
@@ -66,36 +70,37 @@ export interface IDraftMessage {
 }
 
 export interface formState {
-  title: string;
-  summary?: string;
-  btnLink?: string;
-  imageLink?: string;
-  btnTitle?: string;
-  author: string;
-  card?: any;
-  page: string;
-  teamsOptionSelected: boolean;
-  rostersOptionSelected: boolean;
-  allUsersOptionSelected: boolean;
-  groupsOptionSelected: boolean;
-  teams?: any[];
-  groups?: any[];
-  exists?: boolean;
-  messageId: string;
-  loader: boolean;
-  groupAccess: boolean;
-  loading: boolean;
-  noResultMessage: string;
-  unstablePinned?: boolean;
-  selectedTeamsNum: number;
-  selectedRostersNum: number;
-  selectedGroupsNum: number;
-  selectedRadioBtn: string;
-  selectedTeams: dropdownItem[];
-  selectedRosters: dropdownItem[];
-  selectedGroups: dropdownItem[];
-  errorImageUrlMessage: string;
-  errorButtonUrlMessage: string;
+    title: string,
+    summary?: string,
+    btnLink?: string,
+    imageLink?: string,
+    localImagePath?: string,
+    btnTitle?: string,
+    author: string,
+    card?: any,
+    page: string,
+    teamsOptionSelected: boolean,
+    rostersOptionSelected: boolean,
+    allUsersOptionSelected: boolean,
+    groupsOptionSelected: boolean,
+    teams?: any[],
+    groups?: any[],
+    exists?: boolean,
+    messageId: string,
+    loader: boolean,
+    groupAccess: boolean,
+    loading: boolean,
+    noResultMessage: string,
+    unstablePinned?: boolean,
+    selectedTeamsNum: number,
+    selectedRostersNum: number,
+    selectedGroupsNum: number,
+    selectedRadioBtn: string,
+    selectedTeams: dropdownItem[],
+    selectedRosters: dropdownItem[],
+    selectedGroups: dropdownItem[],
+    errorImageUrlMessage: string,
+    errorButtonUrlMessage: string,
 }
 
 export interface INewMessageProps extends RouteComponentProps, WithTranslation {
@@ -103,8 +108,9 @@ export interface INewMessageProps extends RouteComponentProps, WithTranslation {
 }
 
 class NewMessage extends React.Component<INewMessageProps, formState> {
-  readonly localize: TFunction;
-  private card: any;
+    readonly localize: TFunction;
+    private card: any;
+    private fileInput: any;
 
   constructor(props: INewMessageProps) {
     super(props);
@@ -113,36 +119,40 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
     this.card = getInitAdaptiveCard(this.localize);
     this.setDefaultCard(this.card);
 
-    this.state = {
-      title: "",
-      summary: "",
-      author: "",
-      btnLink: "",
-      imageLink: "",
-      btnTitle: "",
-      card: this.card,
-      page: "CardCreation",
-      teamsOptionSelected: true,
-      rostersOptionSelected: false,
-      allUsersOptionSelected: false,
-      groupsOptionSelected: false,
-      messageId: "",
-      loader: true,
-      groupAccess: false,
-      loading: false,
-      noResultMessage: "",
-      unstablePinned: true,
-      selectedTeamsNum: 0,
-      selectedRostersNum: 0,
-      selectedGroupsNum: 0,
-      selectedRadioBtn: "teams",
-      selectedTeams: [],
-      selectedRosters: [],
-      selectedGroups: [],
-      errorImageUrlMessage: "",
-      errorButtonUrlMessage: "",
-    };
-  }
+        this.state = {
+            title: "",
+            summary: "",
+            author: "",
+            btnLink: "",
+            imageLink: "",
+            localImagePath:"",
+            btnTitle: "",
+            card: this.card,
+            page: "CardCreation",
+            teamsOptionSelected: true,
+            rostersOptionSelected: false,
+            allUsersOptionSelected: false,
+            groupsOptionSelected: false,
+            messageId: "",
+            loader: true,
+            groupAccess: false,
+            loading: false,
+            noResultMessage: "",
+            unstablePinned: true,
+            selectedTeamsNum: 0,
+            selectedRostersNum: 0,
+            selectedGroupsNum: 0,
+            selectedRadioBtn: "teams",
+            selectedTeams: [],
+            selectedRosters: [],
+            selectedGroups: [],
+            errorImageUrlMessage: "",
+            errorButtonUrlMessage: "",
+        }
+
+        this.fileInput = React.createRef();
+        this.handleImageSelection = this.handleImageSelection.bind(this);
+    }
 
   public async componentDidMount() {
     microsoftTeams.initialize();
@@ -360,58 +370,147 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
     }
   };
 
-  public componentWillUnmount() {
-    document.removeEventListener("keydown", this.escFunction, false);
-  }
+    public componentWillUnmount() {
+        document.removeEventListener("keydown", this.escFunction, false);
+    }
 
-  public render(): JSX.Element {
-    if (this.state.loader) {
-      return (
-        <div className="Loader">
-          <Loader />
-        </div>
-      );
-    } else {
-      if (this.state.page === "CardCreation") {
-        return (
-          <div className="taskModule">
-            <Flex
-              column
-              className="formContainer"
-              vAlign="stretch"
-              gap="gap.small"
-            >
-              <Flex className="scrollableContent">
-                <Flex.Item size="size.half">
-                  <Flex column className="formContentContainer">
-                    <Input
-                      className="inputField"
-                      value={this.state.title}
-                      label={this.localize("TitleText")}
-                      placeholder={this.localize("PlaceHolderTitle")}
-                      onChange={this.onTitleChanged}
-                      autoComplete="off"
-                      fluid
-                    />
+    private handleUploadClick = (event: any) => {
+        if (this.fileInput.current) {
+            this.fileInput.current.click();
+        }
+    }
 
-                    <Input
-                      fluid
-                      className="inputField"
-                      value={this.state.imageLink}
-                      label={this.localize("ImageURL")}
-                      placeholder={this.localize("ImageURL")}
-                      onChange={this.onImageLinkChanged}
-                      error={!(this.state.errorImageUrlMessage === "")}
-                      autoComplete="off"
-                    />
-                    <Text
-                      className={
-                        this.state.errorImageUrlMessage === "" ? "hide" : "show"
-                      }
-                      error
-                      size="small"
-                      content={this.state.errorImageUrlMessage}
-                    />
+    private checkValidSizeOfImage = (resizedImageAsBase64: string) => {
+        var stringLength = resizedImageAsBase64.length - 'data:image/png;base64,'.length;
+        var sizeInBytes = 4 * Math.ceil((stringLength / 3))*0.5624896334383812;
+        var sizeInKb = sizeInBytes/1000;
+
+        if(sizeInKb <= 1024)
+            return true
+        
+        else
+            return false;
+    }
+    
+
+    private handleImageSelection = () => {
+        const file = this.fileInput.current.files[0];
+        
+        if(file){
+            const  fileType = file['type'];
+            const { type: mimeType } = file;
+
+            if (!validImageTypes.includes(fileType)) {
+               this.setState({errorImageUrlMessage: this.localize("ErrorImageTypesMessage")});
+               return;
+            }
+            
+            this.setState({localImagePath: file['name']});
+            this.setState({errorImageUrlMessage: ""});
+    
+    
+            const fileReader = new FileReader();
+            fileReader.readAsDataURL(file);
+            fileReader.onload = () => {
+                var image = new Image();
+                image.src = fileReader.result as string;
+                var resizedImageAsBase64 = fileReader.result as string;
+
+                image.onload = function (e: any) {
+                    const MAX_WIDTH = 1024;
+    
+                    if (image.width > MAX_WIDTH) {
+                        const canvas = document.createElement('canvas');
+                        canvas.width = MAX_WIDTH;
+                        canvas.height = ~~(image.height * (MAX_WIDTH / image.width));
+                        const context = canvas.getContext('2d', { alpha: false });
+                        if (!context) {
+                            return;
+                        }
+                        context.drawImage(image, 0, 0, canvas.width, canvas.height);
+                        resizedImageAsBase64 = canvas.toDataURL(mimeType);
+                    }
+                }
+
+                if (!this.checkValidSizeOfImage(resizedImageAsBase64)) {
+                    this.setState({ errorImageUrlMessage: this.localize("ErrorImageSizeMessage") });
+                    return;
+                }
+                
+
+                setCardImageLink(this.card, resizedImageAsBase64);
+                this.updateCard();
+                this.setState({
+                    imageLink: resizedImageAsBase64
+                    });
+            }
+    
+            fileReader.onerror = (error) => {
+                //reject(error);
+            }
+        }
+        
+    }
+
+    public render(): JSX.Element {
+        if (this.state.loader) {
+            return (
+                <div className="Loader">
+                    <Loader />
+                </div>
+            );
+        } else {
+            if (this.state.page === "CardCreation") {
+                return (
+                    <div className="taskModule">
+                        <Flex column className="formContainer" vAlign="stretch" gap="gap.small">
+                            <Flex className="scrollableContent">
+                                <Flex.Item size="size.half">
+                                    <Flex column className="formContentContainer">
+                                        <Input className="inputField"
+                                            value={this.state.title}
+                                            label={this.localize("TitleText")}
+                                            placeholder={this.localize("PlaceHolderTitle")}
+                                            onChange={this.onTitleChanged}
+                                            autoComplete="off"
+                                            fluid
+                                        />
+
+                                        <Flex gap="gap.small" vAlign="end">
+                                            <Input fluid className="inputField imageField"
+                                                value={(this.state.imageLink && this.state.imageLink.startsWith("data:"))
+                                                            ? this.state.localImagePath 
+                                                            : this.state.imageLink}
+                                                label={
+                                                    <>
+                                            {this.localize("ImageURL")}
+                                            <TooltipHost 
+                                                content={this.localize("ImageSizeInfoContent")}
+                                                calloutProps={{ gapSpace: 0 }}
+                                                hostClassName="tooltipHostStyles"
+                                                >
+                                                <Icon aria-label="Info" iconName="Info" className='tooltipHostStylesInsideContent'/>
+                                            </TooltipHost>
+                                            </>
+                                            }
+                                                placeholder={this.localize("ImageURL")}
+                                                onChange={this.onImageLinkChanged}
+                                                error={!(this.state.errorImageUrlMessage === "")}
+                                                autoComplete="off"                                             
+                                            />
+                                            
+                                            <Flex.Item push>
+                                                <Button onClick={this.handleUploadClick}
+                                                    size="medium" className="inputField"
+                                                    content={this.localize("Upload")} iconPosition="before" />
+                                            </Flex.Item>
+                                            <input type="file" accept=".jpg, .jpeg, .png, .gif"
+                                                style={{ display: 'none' }}
+                                                multiple={false}
+                                                onChange={this.handleImageSelection}
+                                                ref={this.fileInput} />
+                                        </Flex>
+                                        <Text className={(this.state.errorImageUrlMessage === "") ? "hide" : "show"} error size="small" content={this.state.errorImageUrlMessage} />
 
                     <div className="textArea">
                       <Text content={this.localize("Summary")} />
@@ -468,226 +567,163 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
                 </Flex.Item>
               </Flex>
 
-              <Flex className="footerContainer" vAlign="end" hAlign="end">
-                <Flex className="buttonContainer">
-                  <Button
-                    content={this.localize("Next")}
-                    disabled={this.isNextBtnDisabled()}
-                    id="saveBtn"
-                    onClick={this.onNext}
-                    primary
-                  />
-                </Flex>
-              </Flex>
-            </Flex>
-          </div>
-        );
-      } else if (this.state.page === "AudienceSelection") {
-        return (
-          <div className="taskModule">
-            <Flex
-              column
-              className="formContainer"
-              vAlign="stretch"
-              gap="gap.small"
-            >
-              <Flex className="scrollableContent">
-                <Flex.Item size="size.half">
-                  <Flex column className="formContentContainer">
-                    <h3>{this.localize("SendHeadingText")}</h3>
-                    <RadioGroup
-                      className="radioBtns"
-                      checkedValue={this.state.selectedRadioBtn}
-                      onCheckedValueChange={this.onGroupSelected}
-                      vertical={true}
-                      items={[
-                        {
-                          name: "teams",
-                          key: "teams",
-                          value: "teams",
-                          label: this.localize("SendToGeneralChannel"),
-                          children: (Component, { name, ...props }) => {
-                            return (
-                              <Flex key={name} column>
-                                <Component {...props} />
-                                <Dropdown
-                                  hidden={!this.state.teamsOptionSelected}
-                                  placeholder={this.localize(
-                                    "SendToGeneralChannelPlaceHolder"
-                                  )}
-                                  search
-                                  multiple
-                                  items={this.getItems()}
-                                  value={this.state.selectedTeams}
-                                  onChange={this.onTeamsChange}
-                                  noResultsMessage={this.localize(
-                                    "NoMatchMessage"
-                                  )}
-                                />
-                              </Flex>
-                            );
-                          },
-                        },
-                        {
-                          name: "rosters",
-                          key: "rosters",
-                          value: "rosters",
-                          label: this.localize("SendToRosters"),
-                          children: (Component, { name, ...props }) => {
-                            return (
-                              <Flex key={name} column>
-                                <Component {...props} />
-                                <Dropdown
-                                  hidden={!this.state.rostersOptionSelected}
-                                  placeholder={this.localize(
-                                    "SendToRostersPlaceHolder"
-                                  )}
-                                  search
-                                  multiple
-                                  items={this.getItems()}
-                                  value={this.state.selectedRosters}
-                                  onChange={this.onRostersChange}
-                                  unstable_pinned={this.state.unstablePinned}
-                                  noResultsMessage={this.localize(
-                                    "NoMatchMessage"
-                                  )}
-                                />
-                              </Flex>
-                            );
-                          },
-                        },
-                        {
-                          name: "allUsers",
-                          key: "allUsers",
-                          value: "allUsers",
-                          label: this.localize("SendToAllUsers"),
-                          children: (Component, { name, ...props }) => {
-                            return (
-                              <Flex key={name} column>
-                                <Component {...props} />
-                                <div
-                                  className={
-                                    this.state.selectedRadioBtn === "allUsers"
-                                      ? ""
-                                      : "hide"
-                                  }
-                                >
-                                  <div className="noteText">
-                                    <Text
-                                      error
-                                      content={this.localize(
-                                        "SendToAllUsersNote"
-                                      )}
-                                    />
-                                  </div>
-                                </div>
-                              </Flex>
-                            );
-                          },
-                        },
-                        {
-                          name: "groups",
-                          key: "groups",
-                          value: "groups",
-                          label: this.localize("SendToGroups"),
-                          children: (Component, { name, ...props }) => {
-                            return (
-                              <Flex key={name} column>
-                                <Component {...props} />
-                                <div
-                                  className={
-                                    this.state.groupsOptionSelected &&
-                                    !this.state.groupAccess
-                                      ? ""
-                                      : "hide"
-                                  }
-                                >
-                                  <div className="noteText">
-                                    <Text
-                                      error
-                                      content={this.localize(
-                                        "SendToGroupsPermissionNote"
-                                      )}
-                                    />
-                                  </div>
-                                </div>
-                                <Dropdown
-                                  className="hideToggle"
-                                  hidden={
-                                    !this.state.groupsOptionSelected ||
-                                    !this.state.groupAccess
-                                  }
-                                  placeholder={this.localize(
-                                    "SendToGroupsPlaceHolder"
-                                  )}
-                                  search={this.onGroupSearch}
-                                  multiple
-                                  loading={this.state.loading}
-                                  loadingMessage={this.localize("LoadingText")}
-                                  items={this.getGroupItems()}
-                                  value={this.state.selectedGroups}
-                                  onSearchQueryChange={
-                                    this.onGroupSearchQueryChange
-                                  }
-                                  onChange={this.onGroupsChange}
-                                  noResultsMessage={this.state.noResultMessage}
-                                  unstable_pinned={this.state.unstablePinned}
-                                />
-                                <div
-                                  className={
-                                    this.state.groupsOptionSelected &&
-                                    this.state.groupAccess
-                                      ? ""
-                                      : "hide"
-                                  }
-                                >
-                                  <div className="noteText">
-                                    <Text
-                                      error
-                                      content={this.localize(
-                                        "SendToGroupsNote"
-                                      )}
-                                    />
-                                  </div>
-                                </div>
-                              </Flex>
-                            );
-                          },
-                        },
-                      ]}
-                    ></RadioGroup>
-                  </Flex>
-                </Flex.Item>
-                <Flex.Item size="size.half">
-                  <div className="adaptiveCardContainer"></div>
-                </Flex.Item>
-              </Flex>
-              <Flex className="footerContainer" vAlign="end" hAlign="end">
-                <Flex className="buttonContainer" gap="gap.small">
-                  <Flex.Item push>
-                    <Button
-                      content={this.localize("Back")}
-                      onClick={this.onBack}
-                      secondary
-                    />
-                  </Flex.Item>
-                  <Button
-                    content={this.localize("SaveAsDraft")}
-                    disabled={this.isSaveBtnDisabled()}
-                    id="saveBtn"
-                    onClick={this.onSave}
-                    primary
-                  />
-                </Flex>
-              </Flex>
-            </Flex>
-          </div>
-        );
-      } else {
-        return <div>Error</div>;
-      }
+                            <Flex className="footerContainer" vAlign="end" hAlign="end">
+                                <Flex className="buttonContainer">
+                                    <Button content={this.localize("Next")} disabled={this.isNextBtnDisabled()} id="saveBtn" onClick={this.onNext} primary />
+                                </Flex>
+                            </Flex>
+
+                        </Flex>
+                    </div>
+                );
+            }
+            else if (this.state.page === "AudienceSelection") {
+                return (
+                    <div className="taskModule">
+                        <Flex column className="formContainer" vAlign="stretch" gap="gap.small">
+                            <Flex className="scrollableContent">
+                                <Flex.Item size="size.half">
+                                    <Flex column className="formContentContainer">
+                                        <h3>{this.localize("SendHeadingText")}</h3>
+                                        <RadioGroup
+                                            className="radioBtns"
+                                            checkedValue={this.state.selectedRadioBtn}
+                                            onCheckedValueChange={this.onGroupSelected}
+                                            vertical={true}
+                                            items={[
+                                                {
+                                                    name: "teams",
+                                                    key: "teams",
+                                                    value: "teams",
+                                                    label: this.localize("SendToGeneralChannel"),
+                                                    children: (Component, { name, ...props }) => {
+                                                        return (
+                                                            <Flex key={name} column>
+                                                                <Component {...props} />
+                                                                <Dropdown
+                                                                    hidden={!this.state.teamsOptionSelected}
+                                                                    placeholder={this.localize("SendToGeneralChannelPlaceHolder")}
+                                                                    search
+                                                                    multiple
+                                                                    items={this.getItems()}
+                                                                    value={this.state.selectedTeams}
+                                                                    onChange={this.onTeamsChange}
+                                                                    noResultsMessage={this.localize("NoMatchMessage")}
+                                                                />
+                                                            </Flex>
+                                                        )
+                                                    },
+                                                },
+                                                {
+                                                    name: "rosters",
+                                                    key: "rosters",
+                                                    value: "rosters",
+                                                    label: this.localize("SendToRosters"),
+                                                    children: (Component, { name, ...props }) => {
+                                                        return (
+                                                            <Flex key={name} column>
+                                                                <Component {...props} />
+                                                                <Dropdown
+                                                                    hidden={!this.state.rostersOptionSelected}
+                                                                    placeholder={this.localize("SendToRostersPlaceHolder")}
+                                                                    search
+                                                                    multiple
+                                                                    items={this.getItems()}
+                                                                    value={this.state.selectedRosters}
+                                                                    onChange={this.onRostersChange}
+                                                                    unstable_pinned={this.state.unstablePinned}
+                                                                    noResultsMessage={this.localize("NoMatchMessage")}
+                                                                />
+                                                            </Flex>
+                                                        )
+                                                    },
+                                                },
+                                                {
+                                                    name: "allUsers",
+                                                    key: "allUsers",
+                                                    value: "allUsers",
+                                                    label: this.localize("SendToAllUsers"),
+                                                    children: (Component, { name, ...props }) => {
+                                                        return (
+                                                            <Flex key={name} column>
+                                                                <Component {...props} />
+                                                                <div className={this.state.selectedRadioBtn === "allUsers" ? "" : "hide"}>
+                                                                    <div className="noteText">
+                                                                        <Text error content={this.localize("SendToAllUsersNote")} />
+                                                                    </div>
+                                                                </div>
+                                                            </Flex>
+                                                        )
+                                                    },
+                                                },
+                                                {
+                                                    name: "groups",
+                                                    key: "groups",
+                                                    value: "groups",
+                                                    label: this.localize("SendToGroups"),
+                                                    children: (Component, { name, ...props }) => {
+                                                        return (
+                                                            <Flex key={name} column>
+                                                                <Component {...props} />
+                                                                <div className={this.state.groupsOptionSelected && !this.state.groupAccess ? "" : "hide"}>
+                                                                    <div className="noteText">
+                                                                        <Text error content={this.localize("SendToGroupsPermissionNote")} />
+                                                                    </div>
+                                                                </div>
+                                                                <Dropdown
+                                                                    className="hideToggle"
+                                                                    hidden={!this.state.groupsOptionSelected || !this.state.groupAccess}
+                                                                    placeholder={this.localize("SendToGroupsPlaceHolder")}
+                                                                    search={this.onGroupSearch}
+                                                                    multiple
+                                                                    loading={this.state.loading}
+                                                                    loadingMessage={this.localize("LoadingText")}
+                                                                    items={this.getGroupItems()}
+                                                                    value={this.state.selectedGroups}
+                                                                    onSearchQueryChange={this.onGroupSearchQueryChange}
+                                                                    onChange={this.onGroupsChange}
+                                                                    noResultsMessage={this.state.noResultMessage}
+                                                                    unstable_pinned={this.state.unstablePinned}
+                                                                />
+                                                                <div className={this.state.groupsOptionSelected && this.state.groupAccess ? "" : "hide"}>
+                                                                    <div className="noteText">
+                                                                        <Text error content={this.localize("SendToGroupsNote")} />
+                                                                    </div>
+                                                                </div>
+                                                            </Flex>
+                                                        )
+                                                    },
+                                                }
+                                            ]}
+                                        >
+
+                                        </RadioGroup>
+                                    </Flex>
+                                </Flex.Item>
+                                <Flex.Item size="size.half">
+                                    <div className="adaptiveCardContainer">
+                                    </div>
+                                </Flex.Item>
+                            </Flex>
+                            <Flex className="footerContainer" vAlign="end" hAlign="end">
+                                <Flex className="buttonContainer" gap="gap.small">
+                                    <Flex.Item push>
+                                        <Loader id="draftingLoader" className="hiddenLoader draftingLoader" size="smallest" label={this.localize("DraftingMessageLabel")} labelPosition="end" />
+                                    </Flex.Item>
+                                    <Flex.Item push>
+                                        <Button content={this.localize("Back")} onClick={this.onBack} secondary />
+                                    </Flex.Item>
+                                    <Button content={this.localize("SaveAsDraft")} disabled={this.isSaveBtnDisabled()} id="saveBtn" onClick={this.onSave} primary />
+                                </Flex>
+                            </Flex>
+                        </Flex>
+                    </div>
+                );
+            } else {
+                return (<div>Error</div>);
+            }
+        }
     }
-  }
 
   private onGroupSelected = (event: any, data: any) => {
     this.setState({
@@ -892,16 +928,19 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
       allUsers: this.state.allUsersOptionSelected,
     };
 
-    if (this.state.exists) {
-      this.editDraftMessage(draftMessage).then(() => {
-        microsoftTeams.tasks.submitTask();
-      });
-    } else {
-      this.postDraftMessage(draftMessage).then(() => {
-        microsoftTeams.tasks.submitTask();
-      });
+        let spanner = document.getElementsByClassName("draftingLoader");
+        spanner[0].classList.remove("hiddenLoader");
+
+        if (this.state.exists) {
+            this.editDraftMessage(draftMessage).then(() => {
+                microsoftTeams.tasks.submitTask();
+            });
+        } else {
+            this.postDraftMessage(draftMessage).then(() => {
+                microsoftTeams.tasks.submitTask();
+            });
+        }
     }
-  };
 
   private editDraftMessage = async (draftMessage: IDraftMessage) => {
     try {

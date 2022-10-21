@@ -8,7 +8,7 @@ import DraftMessages from '../DraftMessages/draftMessages';
 import './tabContainer.scss';
 import * as microsoftTeams from "@microsoft/teams-js";
 import { getBaseUrl } from '../../configVariables';
-import { Accordion, Button, Flex, Image, Text, Input } from '@fluentui/react-northstar';
+import { Accordion, Button, Flex, FlexItem, Tooltip } from '@fluentui/react-northstar';
 import { getDraftMessagesList } from '../../actions';
 import { connect } from 'react-redux';
 import { TFunction } from "i18next";
@@ -89,8 +89,14 @@ class TabContainer extends React.Component<ITaskInfoProps, ITabContainerState> {
                     ),
                 },
             }
-        ];
-        
+        ]
+         const buttonId = 'callout-button';
+         const customHeaderImagePath = process.env.REACT_APP_HEADERIMAGE;
+         const customHeaderText = process.env.REACT_APP_HEADERTEXT == null ? 
+                                    this.localize("CompanyCommunicator") 
+                                        : this.localize(process.env.REACT_APP_HEADERTEXT);
+       
+
         return (
             <Flex className="tabContainer" column fill gap="gap.small">
                 <Flex>
