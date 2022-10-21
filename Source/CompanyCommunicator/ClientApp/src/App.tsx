@@ -157,7 +157,10 @@ class App extends React.Component<{}, IAppState> {
   };
 
   public render(): JSX.Element {
-    return <div>{this.setThemeComponent()}</div>;
+      return <div>
+          {this.setThemeComponent()}
+
+      </div>;
   }
 }
 

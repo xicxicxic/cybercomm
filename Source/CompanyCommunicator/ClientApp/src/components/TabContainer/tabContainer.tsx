@@ -8,7 +8,7 @@ import DraftMessages from '../DraftMessages/draftMessages';
 import './tabContainer.scss';
 import * as microsoftTeams from "@microsoft/teams-js";
 import { getBaseUrl } from '../../configVariables';
-import { Accordion, Button, Flex, FlexItem, Tooltip } from '@fluentui/react-northstar';
+import { Accordion, Button, Flex, FlexItem, Tooltip, Image, Text } from '@fluentui/react-northstar';
 import { getDraftMessagesList } from '../../actions';
 import { connect } from 'react-redux';
 import { TFunction } from "i18next";
@@ -22,7 +22,7 @@ interface ITaskInfo {
     card?: string;
     fallbackUrl?: string;
     completionBotId?: string;
-} 
+}
 
 export interface ITaskInfoProps extends WithTranslation {
     getDraftMessagesList?: any;
@@ -30,7 +30,7 @@ export interface ITaskInfoProps extends WithTranslation {
 
 export interface ITabContainerState {
     url: string;
-    settings:string;
+    settings: string;
     searchTerms: string,
 }
 
@@ -64,11 +64,11 @@ class TabContainer extends React.Component<ITaskInfoProps, ITabContainerState> {
         }
     }
 
-    public handleSearchChange(event: any){
-        this.setState({searchTerms:event.target.value});
+    public handleSearchChange(event: any) {
+        this.setState({ searchTerms: event.target.value });
         debugger;
     }
-    
+
     public render(): JSX.Element {
         const panels = [
             {
@@ -90,12 +90,12 @@ class TabContainer extends React.Component<ITaskInfoProps, ITabContainerState> {
                 },
             }
         ]
-         const buttonId = 'callout-button';
-         const customHeaderImagePath = process.env.REACT_APP_HEADERIMAGE;
-         const customHeaderText = process.env.REACT_APP_HEADERTEXT == null ? 
-                                    this.localize("CompanyCommunicator") 
-                                        : this.localize(process.env.REACT_APP_HEADERTEXT);
-       
+        const buttonId = 'callout-button';
+        const customHeaderImagePath = process.env.REACT_APP_HEADERIMAGE;
+        const customHeaderText = process.env.REACT_APP_HEADERTEXT == null ?
+            this.localize("CompanyCommunicator")
+            : this.localize(process.env.REACT_APP_HEADERTEXT);
+
 
         return (
             <Flex className="tabContainer" column fill gap="gap.small">
@@ -104,8 +104,8 @@ class TabContainer extends React.Component<ITaskInfoProps, ITabContainerState> {
                     <Text weight="bold" className='textLogo' content="CyberComm by Devscope"></Text>
                 </Flex>
                 <Flex hAlign='end' vAlign='end'><Button className="newPostBtn" content={this.localize("NewMessage")} onClick={this.onNewMessage} primary />
-                 <Button className="newPostBtn" content={this.localize("Settings")} onClick={this.onSettings} primary /> 
-                  </Flex>
+                    <Button className="newPostBtn" content={this.localize("Settings")} onClick={this.onSettings} primary />
+                </Flex>
                 <Flex className="messageContainer">
                     <Flex.Item grow={1} >
                         <Accordion defaultActiveIndex={[0, 1]} panels={panels} />
