@@ -50,6 +50,15 @@ type FeedItem = {
     title: string;
 };
 
+type ImageItem = {
+    partitionKey?: string;
+    rowKey?: string;
+    timestamp?: any;
+    url: string;
+    selectedImage: boolean;
+    
+}
+
 function SettingsH(props: ISettingsProps) {
     //Inicializa todos os states a serem usados
     const [askAuth, setAskAuth] = useState<boolean>(props.AskAuth);
@@ -59,7 +68,15 @@ function SettingsH(props: ISettingsProps) {
     const [getCncsNewsObj, setGetCncsNewsObj] = useState<Settings>();
     const [feedsList, setFeedsList] = useState<FeedItem[]>();
     const [feedsToDeleteList, setfeedsToDeleteList] = useState<FeedItem[]>();
+    const [imageDataList, setImageDataList] = useState<ImageItem[]>();
     //var list:any;
+
+    const placeholder = [
+        "francisco",
+        "mariana",
+        "diana",
+        "pedro"
+    ]
 
     //Faz o save e trata de fazer o PUT das novas settings
     function saveHandler(event: any) {
@@ -209,34 +226,60 @@ function SettingsH(props: ISettingsProps) {
         <Flex className="container" column>
             <Flex className="boxContainer" column>
                 <Flex gap="gap.small"><Text weight="bold" className="title" content="Feed Configuration"></Text></Flex>
+
                 <Text className="textDescription" content="List of RSS feeds to be sent daily by CyberComm."></Text>
                 <Text className="textDescription" content="The toggle AskAuth switches between sending the message to the drafts or directly to the user without admin approval."></Text>
                 <Text className="textDescription" content="The toggle On checkes whether the news are to be retrieved or not."></Text>
-                <Flex gap="gap.small"><Flex.Item push><Button className="addBtn" content="New feed" primary onClick={() => addHandler()}></Button></Flex.Item></Flex>
-                <Flex><Text weight="bold" className="feedTitle" content="Title"></Text><Text className="titleLink" weight="bold" content="Feed URL"></Text>
-                    <Text className="titleToggle" weight="bold" content="AskAuth"></Text><Text className="onToggle" weight="bold" content="On"></Text></Flex>
 
-                {feedsList && feedsList.map((feed: FeedItem, index: number) => <Flex className="itemsContainer">
-                    <Input fluid className="feedTitleInput" type="text" value={feed.title} onChange={(e: any) => handleTitleChange(e, index)}> </Input>
-                    <Input fluid className="inputFeed" type="text" value={feed.value} onChange={(e: any) => handleValueChange(e, index)}> </Input>
-                    <Checkbox
-                        checked={feed.askAuth}
-                        toggle
-                        onChange={
-                            () => handleAskAuthChange(!feed.askAuth, index)
-                        }
-                    ></Checkbox>
-                    <Checkbox
-                        checked={feed.dailyNotifications}
-                        toggle
-                        onChange={
-                            (e: any) => handleDailyNotificationsChange(!feed.dailyNotifications, index)
-                        }
-                    ></Checkbox>
-                    <Button iconOnly className="deleteBtn" icon={<TrashCanIcon />} primary onClick={() => { deleteHandler(index) }}></Button>
-                </Flex>)}
+                <Flex gap="gap.small"><Flex.Item push><Button className="addBtn" content="New feed" primary onClick={() => addHandler()}></Button></Flex.Item></Flex>
+
+                <Flex>
+                    <Text weight="bold" className="feedTitle" content="Title"></Text><Text className="titleLink" weight="bold" content="Feed URL"></Text>
+                    <Text className="titleToggle" weight="bold" content="AskAuth"></Text><Text className="onToggle" weight="bold" content="On"></Text>
+                </Flex>
+
+                {feedsList && feedsList.map((feed: FeedItem, index: number) =>
+                    <Flex className="itemsContainer">
+                        <Input fluid className="feedTitleInput" type="text" value={feed.title} onChange={(e: any) => handleTitleChange(e, index)}> </Input>
+                        <Input fluid className="inputFeed" type="text" value={feed.value} onChange={(e: any) => handleValueChange(e, index)}> </Input>
+                        <Checkbox
+                            checked={feed.askAuth}
+                            toggle
+                            onChange={
+                                () => handleAskAuthChange(!feed.askAuth, index)
+                            }
+                        ></Checkbox>
+                        <Checkbox
+                            checked={feed.dailyNotifications}
+                            toggle
+                            onChange={
+                                (e: any) => handleDailyNotificationsChange(!feed.dailyNotifications, index)
+                            }
+                        ></Checkbox>
+                        <Button iconOnly className="deleteBtn" icon={<TrashCanIcon />} primary onClick={() => { deleteHandler(index) }}></Button>
+                    </Flex>)}
+
+
+                <Flex>
+                    <Text className="titleLink" weight="bold" content="Image URL"></Text>
+                    <Text className="onToggle" weight="bold" content="On"></Text>
+                </Flex>
+
+                {imageDataList && imageDataList.map((image: ImageItem, index: number) =>
+
+                    <Flex className="itemsContainer">
+                        <Input fluid className="inputFeed" type="text" value={image.url} onChange={(e: any) => handleValueChange(e, index)}> </Input>
+                        <Checkbox
+                            checked={image.selectedImage}
+                            toggle
+                            onChange={
+                                (e: any) => handleDailyNotificationsChange(!image.selectedImage, index)
+                            }
+                        ></Checkbox>
+                    </Flex>)}
 
             </Flex>
+
             <Flex hAlign="center"><Button className="saveBtn" primary content="Save Settings" onClick={saveHandler}></Button></Flex>
         </Flex>
     );
