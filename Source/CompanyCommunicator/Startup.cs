@@ -167,6 +167,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator
             services.AddSingleton<IAppConfigRepository, AppConfigRepository>();
             services.AddSingleton<IFeedDataRepository, FeedDataRepository>();
             services.AddSingleton<IImageDataRepository, ImageDataRepository>();
+            services.AddSingleton<ISendingNotificationDataRepository, SendingNotificationDataRepository>();
 
             // Add service bus message queues.
             services.AddSingleton<IPrepareToSendQueue, PrepareToSendQueue>();

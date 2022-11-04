@@ -4,7 +4,7 @@ import * as microsoftTeams from "@microsoft/teams-js";
 import './Settings.scss';
 import { initializeIcons } from "office-ui-fabric-react/lib/Icons";
 import * as AdaptiveCards from "adaptivecards";
-import { getFeeds, getSettings, updateSettings, createFeed, updateFeed, deleteFeed } from "../../apis/messageListApi";
+import { getFeeds, getSettings, updateSettings, createFeed, updateFeed, deleteFeed, getImageFeed } from "../../apis/messageListApi";
 import { TFunction } from "i18next";
 import { getBaseUrl } from '../../configVariables';
 import {
@@ -56,7 +56,7 @@ type ImageItem = {
     timestamp?: any;
     url: string;
     selectedImage: boolean;
-    
+
 }
 
 function SettingsH(props: ISettingsProps) {
@@ -179,6 +179,7 @@ function SettingsH(props: ISettingsProps) {
         microsoftTeams.initialize();
         loadSettings();
         getFeeds().then(res => { setFeedsList(res.data); });
+        getImageFeed().then(res => { setImageDataList(res.data); })
         setLoading(false);
     }, []);
 
@@ -189,39 +190,7 @@ function SettingsH(props: ISettingsProps) {
         }
     }
 
-    console.log(feedsList)
 
-
-
-
-    /*if (loading) {
-      return (
-        <Flex>
-          <h1>Loading...</h1>
-        </Flex>
-      );
-    } else {
-  
-      <Checkbox
-              label="Ask for authorization"
-              checked={askAuth}
-              toggle
-              onChange={() => {
-                setAskAuth(!askAuth);
-              }}
-            ></Checkbox>
-            <Text style={{marginBottom:"5px"}} content = "If checked creates a draft message otherwise sends the message directly to CyberComm Team General."></Text>
-            <Checkbox
-              label="Get notifications from feeds"
-              toggle
-              checked={getCncsNews}
-              onChange={() => {
-                setGetCncsNews(!getCncsNews);
-              }}
-            ></Checkbox>
-            <Text style={{marginBottom:"5px"}} content = "Runs daily, and gets notifications from the previous day."></Text>
-      
-      */
     return (
         <Flex className="container" column>
             <Flex className="boxContainer" column>
