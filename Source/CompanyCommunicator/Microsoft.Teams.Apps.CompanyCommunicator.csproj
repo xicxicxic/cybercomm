@@ -13,6 +13,7 @@
     <PackageReference Include="Azure.Extensions.AspNetCore.Configuration.Secrets" Version="1.0.0" />
     <PackageReference Include="Azure.Identity" Version="1.4.0" />
     <PackageReference Include="Azure.Security.KeyVault.Secrets" Version="4.1.0" />
+    <PackageReference Include="Azure.Storage.Blobs" Version="12.8.3" />
     <PackageReference Include="Azure.Storage.Blobs" Version="12.8.0" />
     <PackageReference Include="Azure.Storage.Files.Shares" Version="12.1.0" />
     <PackageReference Include="Azure.Storage.Queues" Version="12.2.0" />
@@ -83,7 +84,6 @@
   <PropertyGroup>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <LangVersion>8.0</LangVersion>
-    <UserSecretsId>2e464615-9805-4f14-8ecf-e648efd77a99</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <AssemblyName>Microsoft.Teams.Apps.CompanyCommunicator</AssemblyName>
   </PropertyGroup>
