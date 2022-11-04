@@ -31,7 +31,7 @@ export const searchGroups = async (query: string): Promise<any> => {
     return await axios.get(url);
 }
 
-export const exportNotification = async(payload: {}): Promise<any> => {
+export const exportNotification = async (payload: {}): Promise<any> => {
     let url = baseAxiosUrl + "/exportnotification/export";
     return await axios.put(url, payload);
 }
@@ -95,18 +95,18 @@ export const sendPreview = async (payload: {}): Promise<any> => {
 export const getSettings = async (): Promise<any> => {
     let url = baseAxiosUrl + "/appconfig";
     return await axios.get(url);
-  };
+};
 
 export const updateSettings = async (payload: {}): Promise<any> => {
     let url = baseAxiosUrl + "/appconfig";
     return await axios.put(url, payload);
 };
-  
-  
+
+
 export const getFeeds = async (): Promise<any> => {
     let url = baseAxiosUrl + "/feedData";
     return await axios.get(url);
-  };
+};
 
 export const createFeed = async (payload: {}): Promise<any> => {
     let url = baseAxiosUrl + "/feedData";
@@ -121,6 +121,15 @@ export const updateFeed = async (payload: {}): Promise<any> => {
 export const deleteFeed = async (id: number): Promise<any> => {
     let url = baseAxiosUrl + "/feedData/" + id;
     return await axios.delete(url);
+}
+
+export const getImageFeed = async (): Promise<any> => {
+    let url = baseAxiosUrl + "/imageData";
+    return await axios.get(url);
+}
+export const createImageFeed = async (payload: []): Promise<any> => {
+    let url = baseAxiosUrl + "/imageData";
+    return await axios.get(url);
 }
 
 export const getAuthenticationConsentMetadata = async (windowLocationOriginDomain: string, login_hint: string): Promise<any> => {
