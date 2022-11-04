@@ -18,6 +18,8 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories
         public string Url { get; set; }
 
         public bool SelectedImage { get; set; }
+         
+        public string Name { get; set; }
 
     }
 }

@@ -75,6 +75,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories
                     RowKey = newDataImageId,
                     Url = ImageData.Url,
                     SelectedImage = ImageData.SelectedImage,
+                    Name = ImageData.Name,
                 };
                 await this.CreateOrUpdateAsync(ImageDataEntity);
             }

@@ -127,7 +127,7 @@ export const getImageFeed = async (): Promise<any> => {
     let url = baseAxiosUrl + "/imageData";
     return await axios.get(url);
 }
-export const createImageFeed = async (payload: []): Promise<any> => {
+export const createImageFeed = async (payload: {}): Promise<any> => {
     let url = baseAxiosUrl + "/imageData";
     return await axios.get(url);
 }

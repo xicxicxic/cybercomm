@@ -4,7 +4,7 @@ import * as microsoftTeams from "@microsoft/teams-js";
 import './Settings.scss';
 import { initializeIcons } from "office-ui-fabric-react/lib/Icons";
 import * as AdaptiveCards from "adaptivecards";
-import { getFeeds, getSettings, updateSettings, createFeed, updateFeed, deleteFeed, getImageFeed } from "../../apis/messageListApi";
+import { getFeeds, getSettings, updateSettings, createFeed, updateFeed, deleteFeed, getImageFeed, createImageFeed } from "../../apis/messageListApi";
 import { TFunction } from "i18next";
 import { getBaseUrl } from '../../configVariables';
 import {
@@ -25,14 +25,12 @@ import {
     EditIcon
 } from "@fluentui/react-northstar";
 
-//Interface para os props, provavelmente inutil
 export interface ISettingsProps {
     AskAuth: boolean;
     GetCncsNews: boolean;
 }
 
 
-//Type para o objeto settings
 type Settings = {
     partitionKey: string;
     rowKey: string;
@@ -56,6 +54,7 @@ type ImageItem = {
     timestamp?: any;
     url: string;
     selectedImage: boolean;
+    name: string;
 
 }
 
@@ -69,14 +68,6 @@ function SettingsH(props: ISettingsProps) {
     const [feedsList, setFeedsList] = useState<FeedItem[]>();
     const [feedsToDeleteList, setfeedsToDeleteList] = useState<FeedItem[]>();
     const [imageDataList, setImageDataList] = useState<ImageItem[]>();
-    //var list:any;
-
-    const placeholder = [
-        "francisco",
-        "mariana",
-        "diana",
-        "pedro"
-    ]
 
     //Faz o save e trata de fazer o PUT das novas settings
     function saveHandler(event: any) {
@@ -138,6 +129,13 @@ function SettingsH(props: ISettingsProps) {
             feedsToDeleteList.push(feedsList[index]);
             setFeedsList([...feedsList.filter(feed => feed != feedsList[index])]);
             setfeedsToDeleteList([...feedsToDeleteList]);
+        }
+    }
+
+    function handleSelectedImage(value: boolean, index: number) {
+        if (imageDataList != null) {
+            imageDataList[index].selectedImage = value;
+            createImageFeed(imageDataList[index]);
         }
     }
 
@@ -203,8 +201,10 @@ function SettingsH(props: ISettingsProps) {
                 <Flex gap="gap.small"><Flex.Item push><Button className="addBtn" content="New feed" primary onClick={() => addHandler()}></Button></Flex.Item></Flex>
 
                 <Flex>
-                    <Text weight="bold" className="feedTitle" content="Title"></Text><Text className="titleLink" weight="bold" content="Feed URL"></Text>
-                    <Text className="titleToggle" weight="bold" content="AskAuth"></Text><Text className="onToggle" weight="bold" content="On"></Text>
+                    <Text weight="bold" className="feedTitle" content="Title"></Text>
+                    <Text className="titleLink" weight="bold" content="Feed URL"></Text>
+                    <Text className="titleToggle" weight="bold" content="AskAuth"></Text>
+                    <Text className="onToggle" weight="bold" content="On"></Text>
                 </Flex>
 
                 {feedsList && feedsList.map((feed: FeedItem, index: number) =>
@@ -230,6 +230,7 @@ function SettingsH(props: ISettingsProps) {
 
 
                 <Flex>
+                    <Text className="feedTitle" weight="bold" content="Title"></Text>
                     <Text className="titleLink" weight="bold" content="Image URL"></Text>
                     <Text className="onToggle" weight="bold" content="On"></Text>
                 </Flex>
@@ -242,7 +243,7 @@ function SettingsH(props: ISettingsProps) {
                             checked={image.selectedImage}
                             toggle
                             onChange={
-                                (e: any) => handleDailyNotificationsChange(!image.selectedImage, index)
+                                (e: any) => handleSelectedImage(!image.selectedImage, index)
                             }
                         ></Checkbox>
                     </Flex>)}
