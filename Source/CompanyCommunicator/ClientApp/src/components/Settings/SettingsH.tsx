@@ -239,23 +239,23 @@ function SettingsH(props: ISettingsProps) {
                         <Button iconOnly className="deleteBtn" icon={<TrashCanIcon />} primary onClick={() => { deleteHandler(index) }}></Button>
                     </Flex>)}
 
-                <Flex gap="gap.small">
+                <Flex style={{ marginTop: "20px" }} gap="gap.small">
                     <Flex.Item push>
                         <Button className="addBtn" content="New feed" primary onClick={() => addHandler()}/>
                     </Flex.Item>
                 </Flex>
 
                 <Flex>
-                    <Text className="feedTitle" weight="bold" content="Title"></Text>
-                    <Text className="titleLink" weight="bold" content="Image URL"></Text>
-                    <Text className="onToggle" weight="bold" content="On"></Text>
+                    <Text className="feedTitleImage" weight="bold" content="Title"></Text>
+                    <Text className="titleLinkImage" weight="bold" content="Image URL"></Text>
+                    <Text className="onToggleImage" weight="bold" content="On"></Text>
                 </Flex>
 
                 {imageDataList && imageDataList.map((image: ImageItem, index: number) =>
 
-                    <Flex className="itemsContainer">
-                        <Input fluid className="feedTitleInput" type="text" value={image.name} onChange={(e: any) => handleImageNameChange(e, index)}> </Input>
-                        <Input fluid className="inputFeed" type="text" value={image.url} onChange={(e: any) => handleImageUrlChange(e, index)}> </Input>
+                    <Flex className="itemsContainer" style={{ position: "relative" }}>
+                        <Input fluid className="imageTitleInput" type="text" value={image.name} onChange={(e: any) => handleImageNameChange(e, index)}> </Input>
+                        <Input fluid className="imageUrlInput" type="text" value={image.url} onChange={(e: any) => handleImageUrlChange(e, index)}> </Input>
                         <Checkbox
                             checked={image.selectedImage}
                             toggle
@@ -263,6 +263,13 @@ function SettingsH(props: ISettingsProps) {
                                 (e: any) => handleSelectedImage(!image.selectedImage, index)
                             }
                         ></Checkbox>
+                        <Button
+                            iconOnly
+                            style={{ position: "absolute", right: "0px" }}
+                            className="deleteBtn"
+                            icon={<TrashCanIcon />}
+                            primary
+                        ></Button>
                     </Flex>)}
 
             </Flex>
