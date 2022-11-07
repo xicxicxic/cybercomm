@@ -135,7 +135,18 @@ function SettingsH(props: ISettingsProps) {
     function handleSelectedImage(value: boolean, index: number) {
         if (imageDataList != null) {
             imageDataList[index].selectedImage = value;
-            createImageFeed(imageDataList[index]);
+        }
+    }
+
+    function handleImageNameChange(value: string, index: number) {
+        if (imageDataList != null) {
+            imageDataList[index].name = value;
+        }
+    }
+
+    function handleImageUrlChange(value: string, index: number) {
+        if (imageDataList != null) {
+            imageDataList[index].url = value;
         }
     }
 
@@ -228,6 +239,11 @@ function SettingsH(props: ISettingsProps) {
                         <Button iconOnly className="deleteBtn" icon={<TrashCanIcon />} primary onClick={() => { deleteHandler(index) }}></Button>
                     </Flex>)}
 
+                <Flex gap="gap.small">
+                    <Flex.Item push>
+                        <Button className="addBtn" content="New feed" primary onClick={() => addHandler()}/>
+                    </Flex.Item>
+                </Flex>
 
                 <Flex>
                     <Text className="feedTitle" weight="bold" content="Title"></Text>
@@ -238,7 +254,8 @@ function SettingsH(props: ISettingsProps) {
                 {imageDataList && imageDataList.map((image: ImageItem, index: number) =>
 
                     <Flex className="itemsContainer">
-                        <Input fluid className="inputFeed" type="text" value={image.url} onChange={(e: any) => handleValueChange(e, index)}> </Input>
+                        <Input fluid className="feedTitleInput" type="text" value={image.name} onChange={(e: any) => handleImageNameChange(e, index)}> </Input>
+                        <Input fluid className="inputFeed" type="text" value={image.url} onChange={(e: any) => handleImageUrlChange(e, index)}> </Input>
                         <Checkbox
                             checked={image.selectedImage}
                             toggle
