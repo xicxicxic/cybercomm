@@ -1,59 +1,89 @@
-.deleteBtn{
+.container {
+    width: 530px;
+    width: 600px;
+}
+
+.deleteBtn {
     min-width: 0px;
     width: 20px;
     margin-left: 5px;
     margin-right: 5px;
 }
 
-.itemsContainer{
+.itemsContainer {
     margin-bottom: 5px;
 }
 
-.inputFeed{
+/* Settings Inputs */
+.inputFeed {
     width: 100% !important;
     margin-left: 5px;
+    margin-right: 5px;
     box-sizing: 300;
-    
 }
 
-.feedTitle{
+.feedTitleInput {
     width: 90px !important;
-    margin-left: 15px;
+    min-width: 90px;
 }
 
-.feedTitleInput{
-    width: 150px !important;
+.valueFeedInput {
+    width: 415px !important;
+}
+
+/* Image Inputs */
+.imageUrlInput {
     margin-left: 5px;
+    width: 415px !important;
 }
 
-.valueFeedInput{
-    width: 100px !important;
-    margin-left: 5px;
+.imageTitleInput {
+    width: 90px !important;
+    min-width: 90px;
 }
 
-.title{
+
+.title {
     margin-left: 5px;
     margin-top: 5px;
     margin-bottom: 5px;
 }
 
-.textDescription{
+.textDescription {
     margin-left: 5px;
 }
 
-.titleLink{
-    width: 55% !important;
-}
-
-.titleToggle{
+/* Settings Container Headers */
+.titleToggle {
     width: 12% !important;
 }
 
-.onToggle{
+.feedTitle {
+    width: 95px !important;
+}
+
+.onToggle {
     width: 12% !important;
 }
 
-.addBtn{
+.titleLink {
+    width: 345px !important;
+}
+
+/* Image Container Headers */
+.titleLinkImage {
+    width: 430px !important;
+}
+
+.feedTitleImage {
+    width: 95px !important;
+}
+
+.onToggleImage {
+    width: 12% !important;
+}
+
+.addBtn {
     min-width: 0px !important;
     width: 110px !important;
     margin-right: 5px;
@@ -61,8 +91,9 @@
     margin-top: 10px;
 }
 
-.saveBtn{
+.saveBtn {
     min-width: 0px !important;
     width: 175px !important;
     margin-left: 5px;
+    margin-top: 20px;
 }
