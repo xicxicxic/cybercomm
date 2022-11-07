@@ -33,6 +33,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Controllers
                     PartitionKey = entity.PartitionKey,
                     RowKey = entity.RowKey, 
                     SelectedImage = entity.SelectedImage,
+                    Name = entity.Name,
                 };
 
                 result.Add(item);
