@@ -159,6 +159,8 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator
             services.AddTransient<CompanyCommunicatorBotFilterMiddleware>();
             services.AddSingleton<CompanyCommunicatorBotAdapter>();
             services.AddSingleton<BotFrameworkHttpAdapter>();
+            services.AddSingleton<UserAppCredentials>();
+            services.AddSingleton<AuthorAppCredentials>();
 
             // Add repositories.
             services.AddSingleton<ITeamDataRepository, TeamDataRepository>();
@@ -199,6 +201,8 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator
             services.AddTransient<IUserDataService, UserDataService>();
             services.AddTransient<ITeamMembersService, TeamMembersService>();
             services.AddTransient<ICCBotFrameworkHttpAdapter, CCBotFrameworkHttpAdapter>();
+
+            services.AddTransient<IConversationService, ConversationService>();
 
             /*services.AddCors(options =>
             {

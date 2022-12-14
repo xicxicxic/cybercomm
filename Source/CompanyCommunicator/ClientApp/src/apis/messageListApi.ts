@@ -91,17 +91,10 @@ export const sendPreview = async (payload: {}): Promise<any> => {
     let url = baseAxiosUrl + "/draftnotifications/previews";
     return await axios.post(url, payload);
 }
-
-export const getSettings = async (): Promise<any> => {
-    let url = baseAxiosUrl + "/appconfig";
-    return await axios.get(url);
-};
-
-export const updateSettings = async (payload: {}): Promise<any> => {
-    let url = baseAxiosUrl + "/appconfig";
-    return await axios.put(url, payload);
-};
-
+export const testPost = async (payload: {}): Promise<any> => {
+    let url = baseAxiosUrl + "/draftnotifications/test";
+    return await axios.post(url, payload);
+}
 
 export const getFeeds = async (): Promise<any> => {
     let url = baseAxiosUrl + "/feedData";

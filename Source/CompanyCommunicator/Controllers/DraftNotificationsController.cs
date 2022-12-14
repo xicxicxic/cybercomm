@@ -320,6 +320,42 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Controllers
             return this.Ok(result);
         }
 
+        [HttpPost("test")]
+        public async Task<ActionResult> TestSendNotificationAsync(
+            [FromBody] DraftNotificationPreviewRequest draftNotificationPreviewRequest)
+        {
+            if (draftNotificationPreviewRequest is null || string.IsNullOrWhiteSpace(draftNotificationPreviewRequest.DraftNotificationId))
+            {
+                return this.BadRequest();
+            }
+
+            var notificationEntity = await this.notificationDataRepository.GetAsync(
+               NotificationDataTableNames.DraftNotificationsPartition,
+               draftNotificationPreviewRequest.DraftNotificationId);
+
+            var teamDataEntity = new TeamDataEntity();
+            teamDataEntity.TenantId = this.HttpContext.User.FindFirstValue(Common.Constants.ClaimTypeTenantId);
+            teamDataEntity.ServiceUrl = await this.appSettingsService.GetServiceUrlAsync();
+
+            var userId = this.HttpContext.User.FindFirstValue(Common.Constants.ClaimTypeUserId);
+
+            if (notificationEntity == null)
+            {
+                return this.BadRequest($"Notification {draftNotificationPreviewRequest.DraftNotificationId} not found.");
+            }
+
+            // Download base64 data from blob convert to base64 string.
+            if (!string.IsNullOrEmpty(notificationEntity.ImageBase64BlobName))
+            {
+                notificationEntity.ImageLink = await this.notificationDataRepository.GetImageAsync(notificationEntity.ImageLink, notificationEntity.ImageBase64BlobName);
+            }
+
+            var result = await this.draftNotificationPreviewService.SendTest(
+                notificationEntity,
+                userId);
+            return this.StatusCode((int)result);
+        }
+
         /// <summary>
         /// Preview draft notification.
         /// </summary>

@@ -43,6 +43,6 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Services.Teams
             string tenantId,
             string serviceUrl,
             int maxAttempts,
-            ILogger log);
+            ILogger? log);
     }
 }

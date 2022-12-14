@@ -87,7 +87,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories.Notificat
                     ButtonTitle = draftNotificationEntity.ButtonTitle,
                     ButtonLink = draftNotificationEntity.ButtonLink,
                     CreatedBy = draftNotificationEntity.CreatedBy,
-                    CreatedDate = draftNotificationEntity.CreatedDate,
+                    CreatedDate = DateTime.UtcNow,
                     SentDate = null,
                     IsDraft = false,
                     Teams = draftNotificationEntity.Teams,

@@ -24,5 +24,6 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.DraftNotificationPreview
         /// <returns>It returns HttpStatusCode.OK, if this method triggers the bot service to send the adaptive card successfully.
         /// It returns HttpStatusCode.TooManyRequests, if the bot service throttled the request to send the adaptive card.</returns>
         public Task<HttpStatusCode> SendPreview(NotificationDataEntity draftNotificationEntity, TeamDataEntity teamDataEntity, string teamsChannelId);
+        public Task<HttpStatusCode> SendTest(NotificationDataEntity draftNotificationEntity, string userId);
     }
 }

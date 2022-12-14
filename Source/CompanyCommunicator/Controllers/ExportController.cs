@@ -25,7 +25,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Controllers
     /// Coontroller for exporting notification.
     /// </summary>
     [Route("api/exportnotification")]
-    //[Authorize(PolicyNames.MustBeValidUpnPolicy)]
+   //[Authorize(PolicyNames.MustBeValidUpnPolicy)]
     public class ExportController : Controller
     {
         private readonly ISentNotificationDataRepository sentNotificationDataRepository;

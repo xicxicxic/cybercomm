@@ -12,18 +12,30 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.DraftNotificationPreview
     using AdaptiveCards;
     using Microsoft.Bot.Builder;
     using Microsoft.Bot.Schema;
+    using Microsoft.Extensions.Localization;
+    using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using Microsoft.Teams.Apps.CompanyCommunicator.Bot;
+    using Microsoft.Teams.Apps.CompanyCommunicator.Common.Adapter;
     using Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories.NotificationData;
     using Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories.TeamData;
+    using Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories.UserData;
     using Microsoft.Teams.Apps.CompanyCommunicator.Common.Services.AdaptiveCard;
     using Microsoft.Teams.Apps.CompanyCommunicator.Common.Services.CommonBot;
+    using Microsoft.Teams.Apps.CompanyCommunicator.Common.Services.Teams;
+    using Microsoft.Teams.Apps.CompanyCommunicator.Models;
 
     /// <summary>
     /// Draft notification preview service.
     /// </summary>
     public class DraftNotificationPreviewService : IDraftNotificationPreviewService
     {
+        private readonly string authorAppId;
+        private readonly ICCBotFrameworkHttpAdapter botAdapter;
+        private readonly IUserDataRepository userDataRepository;
+        private readonly IConversationService conversationService;
+        private readonly INotificationDataRepository notificationDataRepository;
+
         private static readonly string MsTeamsChannelId = "msteams";
         private static readonly string ChannelConversationType = "channel";
         private static readonly string ThrottledErrorResponse = "Throttled";
@@ -41,7 +53,9 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.DraftNotificationPreview
         public DraftNotificationPreviewService(
             IOptions<BotOptions> botOptions,
             AdaptiveCardCreator adaptiveCardCreator,
-            CompanyCommunicatorBotAdapter companyCommunicatorBotAdapter)
+            CompanyCommunicatorBotAdapter companyCommunicatorBotAdapter,
+            IUserDataRepository userDataRepository,
+            IConversationService conversationService)
         {
             var options = botOptions ?? throw new ArgumentNullException(nameof(botOptions));
             this.botAppId = options.Value.AuthorAppId;
@@ -52,6 +66,9 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.DraftNotificationPreview
 
             this.adaptiveCardCreator = adaptiveCardCreator ?? throw new ArgumentNullException(nameof(adaptiveCardCreator));
             this.companyCommunicatorBotAdapter = companyCommunicatorBotAdapter ?? throw new ArgumentNullException(nameof(companyCommunicatorBotAdapter));
+            this.userDataRepository = userDataRepository ?? throw new ArgumentNullException(nameof(userDataRepository));
+            this.conversationService = conversationService;
+            this.authorAppId = botOptions?.Value?.AuthorAppId ?? throw new ArgumentNullException(nameof(botOptions));
         }
 
         /// <inheritdoc/>
@@ -80,6 +97,61 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.DraftNotificationPreview
             {
                 await this.companyCommunicatorBotAdapter.ContinueConversationAsync(
                     this.botAppId,
+                    conversationReference,
+                    async (turnContext, cancellationToken) => await this.SendAdaptiveCardAsync(turnContext, draftNotificationEntity),
+                    CancellationToken.None);
+                return HttpStatusCode.OK;
+            }
+            catch (ErrorResponseException e)
+            {
+                var errorResponse = (ErrorResponse)e.Body;
+                if (errorResponse != null
+                    && errorResponse.Error.Code.Equals(DraftNotificationPreviewService.ThrottledErrorResponse, StringComparison.OrdinalIgnoreCase))
+                {
+                    return HttpStatusCode.TooManyRequests;
+                }
+
+                throw;
+            }
+        }
+        public async Task<HttpStatusCode> SendTest(NotificationDataEntity draftNotificationEntity, string userId)
+        {
+            if (draftNotificationEntity == null)
+            {
+                throw new ArgumentException("Null draft notification entity.");
+            }
+
+            if (string.IsNullOrWhiteSpace(userId))
+            {
+                throw new ArgumentException("Null user id.");
+            }
+
+            var user = await this.userDataRepository.GetAsync(UserDataTableNames.AuthorDataPartition, userId);
+            string conversationId = string.Empty;
+
+
+            if (!string.IsNullOrEmpty(user.UserId))
+            {
+                // Create conversation using bot adapter for users with teams user id.
+                conversationId = await this.CreateConversationWithTeamsAuthor(draftNotificationEntity.Id, user);
+                user.ConversationId = conversationId;
+                await this.userDataRepository.CreateOrUpdateAsync(user);
+            }
+
+            var conversationReference = new ConversationReference
+            {
+                ServiceUrl = user.ServiceUrl,
+                Conversation = new ConversationAccount
+                {
+                    Id = user.ConversationId,
+                },
+            };
+
+            // Trigger bot to send the adaptive card.
+            try
+            {
+                await this.botAdapter.ContinueConversationAsync(
+                    this.authorAppId,
                     conversationReference,
                     async (turnContext, cancellationToken) => await this.SendAdaptiveCardAsync(turnContext, draftNotificationEntity),
                     CancellationToken.None);
@@ -151,6 +223,33 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.DraftNotificationPreview
             var reply = MessageFactory.Attachment(attachment);
 
             return reply;
+        }
+        private async Task<string> CreateConversationWithTeamsAuthor(
+    string notificationId,
+    UserDataEntity user)
+        {
+            try
+            {
+                // Create conversation.
+                var response = await this.conversationService.CreateAuthorConversationAsync(
+                    teamsUserId: user.UserId,
+                    tenantId: user.TenantId,
+                    serviceUrl: user.ServiceUrl,
+                    maxAttempts: 10,
+                    null);
+
+                return response.Result switch
+                {
+                    Result.Succeeded => response.ConversationId,
+                    Result.Throttled => throw new Exception("Error"),
+                    _ => throw new Exception("Error"),
+                };
+            }
+            catch (Exception exception)
+            { 
+                await this.notificationDataRepository.SaveWarningInNotificationDataEntityAsync(notificationId, "Error");
+                return null;
+            }
         }
     }
 }

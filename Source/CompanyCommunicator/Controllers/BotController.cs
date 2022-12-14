@@ -64,7 +64,16 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Controllers
         [Route("author")]
         public async Task PostAuthorAsync()
         {
-            await this.adapter.ProcessAsync(this.Request, this.Response, this.authorBot);
+            try
+            {
+                await this.adapter.ProcessAsync(this.Request, this.Response, this.authorBot);
+
+                var t = 0;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
     }
 }
