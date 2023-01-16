@@ -6,7 +6,7 @@ import * as microsoftTeams from "@microsoft/teams-js";
 
 import { getBaseUrl } from '../../configVariables';
 import { selectMessage, getMessagesList, getDraftMessagesList } from '../../actions';
-import { deleteDraftNotification, duplicateDraftNotification, sendPreview } from '../../apis/messageListApi';
+import { deleteDraftNotification, duplicateDraftNotification, sendPreview, testPost } from '../../apis/messageListApi';
 import { TFunction } from "i18next";
 
 export interface OverflowProps extends WithTranslation {
@@ -92,6 +92,25 @@ class Overflow extends React.Component<OverflowProps, OverflowState> {
                                     teamsChannelId: this.state.teamsChannelId,
                                 }
                                 sendPreview(payload).then((response) => {
+                                    return response.status;
+                                }).catch((error) => {
+                                    return error;
+                                });
+                            }
+                        }, {
+                            key: 'test',
+                            content:"Test Message",
+                            onClick: (event: any) => {
+                                event.stopPropagation();
+                                this.setState({
+                                    menuOpen: false,
+                                });
+                                let payload = {
+                                    draftNotificationId: this.props.message.id,
+                                    teamsTeamId: this.state.teamsTeamId,
+                                    teamsChannelId: this.state.teamsChannelId,
+                                }
+                                testPost(payload).then((response) => {
                                     return response.status;
                                 }).catch((error) => {
                                     return error;

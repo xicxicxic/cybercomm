@@ -24,6 +24,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.DraftNotificationPreview
     using Microsoft.Teams.Apps.CompanyCommunicator.Common.Services.CommonBot;
     using Microsoft.Teams.Apps.CompanyCommunicator.Common.Services.Teams;
     using Microsoft.Teams.Apps.CompanyCommunicator.Models;
+    using Moq;
 
     /// <summary>
     /// Draft notification preview service.
@@ -35,7 +36,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.DraftNotificationPreview
         private readonly IUserDataRepository userDataRepository;
         private readonly IConversationService conversationService;
         private readonly INotificationDataRepository notificationDataRepository;
-
+        private readonly Mock<ILogger> log = new Mock<ILogger>();
         private static readonly string MsTeamsChannelId = "msteams";
         private static readonly string ChannelConversationType = "channel";
         private static readonly string ThrottledErrorResponse = "Throttled";
@@ -55,7 +56,8 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.DraftNotificationPreview
             AdaptiveCardCreator adaptiveCardCreator,
             CompanyCommunicatorBotAdapter companyCommunicatorBotAdapter,
             IUserDataRepository userDataRepository,
-            IConversationService conversationService)
+            IConversationService conversationService,
+            ICCBotFrameworkHttpAdapter botAdapter)
         {
             var options = botOptions ?? throw new ArgumentNullException(nameof(botOptions));
             this.botAppId = options.Value.AuthorAppId;
@@ -69,6 +71,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.DraftNotificationPreview
             this.userDataRepository = userDataRepository ?? throw new ArgumentNullException(nameof(userDataRepository));
             this.conversationService = conversationService;
             this.authorAppId = botOptions?.Value?.AuthorAppId ?? throw new ArgumentNullException(nameof(botOptions));
+            this.botAdapter = botAdapter ?? throw new ArgumentNullException(nameof(botAdapter));
         }
 
         /// <inheritdoc/>
@@ -236,7 +239,8 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.DraftNotificationPreview
                     tenantId: user.TenantId,
                     serviceUrl: user.ServiceUrl,
                     maxAttempts: 10,
-                    null);
+                    this.log.Object
+                    );
 
                 return response.Result switch
                 {

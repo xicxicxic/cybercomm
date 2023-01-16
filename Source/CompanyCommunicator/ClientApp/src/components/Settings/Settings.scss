@@ -1,6 +1,19 @@
 .container {
-    width: 530px;
-    width: 600px;
+    position:absolute;
+    padding-left: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-style: none;
+
+    max-width:560px;
+    background-color:transparent;
+}
+
+.boxContainer {
+    margin: 1rem;
+
+    max-width: 560px;
+    background-color: transparent;
 }
 
 .deleteBtn {
@@ -16,7 +29,7 @@
 
 /* Settings Inputs */
 .inputFeed {
-    width: 100% !important;
+    width: 450px !important;
     margin-left: 5px;
     margin-right: 5px;
     box-sizing: 300;
@@ -28,13 +41,15 @@
 }
 
 .valueFeedInput {
-    width: 415px !important;
+    width: 450px !important;
 }
 
 /* Image Inputs */
 .imageUrlInput {
+    width: 400px !important;
     margin-left: 5px;
-    width: 415px !important;
+    margin-right: 5px;
+    box-sizing: 300;
 }
 
 .imageTitleInput {
@@ -47,28 +62,42 @@
     margin-left: 5px;
     margin-top: 5px;
     margin-bottom: 5px;
+    font-size: 30px;
+    font-weight: "Bold";
 }
 
 .textDescription {
     margin-left: 5px;
+    font-size: 13px;
+    color: #797775;
 }
 
 /* Settings Container Headers */
-.titleToggle {
-    width: 12% !important;
-}
-
 .feedTitle {
-    width: 95px !important;
-}
-
-.onToggle {
-    width: 12% !important;
+    width: 100px !important;
+    color: #797775;
 }
 
 .titleLink {
-    width: 345px !important;
+    width: 247px !important;
+    color: #797775;
 }
+
+.titleToggle {
+    width: 15% !important;
+    color: #797775;
+}
+
+.onToggle {
+    width: 8% !important;
+    color: #797775;
+}
+
+.onDelete {
+    width: 7% !important;
+    color: #797775;
+}
+
 
 /* Image Container Headers */
 .titleLinkImage {
@@ -85,15 +114,37 @@
 
 .addBtn {
     min-width: 0px !important;
-    width: 110px !important;
+    width: 170px !important;
     margin-right: 5px;
     margin-bottom: 5px;
     margin-top: 10px;
+    margin-left: 0px;
+    text-align: left;
 }
 
 .saveBtn {
     min-width: 0px !important;
-    width: 175px !important;
+    width: 130px !important;
     margin-left: 5px;
     margin-top: 20px;
+}
+
+.titleCell {
+    width: 95px !important;
+}
+
+.urlCell {
+    width: 415px !important;
+}
+
+.moderationCell {
+    width: 10px;
+}
+
+.onCell {
+    width: 10px;
+}
+
+.deleteCell {
+    width: 10px;
 }
