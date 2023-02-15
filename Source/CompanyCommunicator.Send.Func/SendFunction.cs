@@ -23,6 +23,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Send.Func
     using Microsoft.Teams.Apps.CompanyCommunicator.Common.Services.Teams;
     using Microsoft.Teams.Apps.CompanyCommunicator.Send.Func.Services;
     using Newtonsoft.Json;
+    using AdaptiveCards; 
 
     /// <summary>
     /// Azure Function App triggered by messages from a Service Bus queue
@@ -173,6 +174,19 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Send.Func
                     maxAttempts: this.maxNumberOfAttempts,
                     logger: log);
 
+                // checks if the recipient of the notification is a user, and sends a feedback adaptive card
+                if (messageContent.RecipientData.RecipientDataType == RecipientType.User)
+                {
+                    // Send feedback card
+                    var feedbackMessage = await this.GetFeedbackMessage(messageContent, log);
+                    var feedbackActivity = await this.messageService.SendMessageAsync(
+                        message: feedbackMessage,
+                        serviceUrl: messageContent.GetServiceUrl(),
+                        conversationId: messageContent.GetConversationId(),
+                        maxNumberOfAttempts: this.maxNumberOfAttempts,
+                        logger: log);
+                }
+
                 // Process response.
                 await this.ProcessResponseAsync(messageContent, response, log);
             }
@@ -279,5 +293,51 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Send.Func
 
             return MessageFactory.Attachment(adaptiveCardAttachment);
         }
-    }
+
+        private async Task<IMessageActivity> GetFeedbackMessage(SendQueueMessageContent message, ILogger log)
+        {
+            var notificationId = message.NotificationId;
+
+            AdaptiveCard feedbackcard = new AdaptiveCard(new AdaptiveSchemaVersion(1, 0));
+
+            feedbackcard.Body.Add(new AdaptiveTextBlock()
+            {
+                Text = "Cybercomm",
+                Wrap = true,
+                Size = AdaptiveTextSize.Medium,
+
+            });
+            feedbackcard.Body.Add(new AdaptiveImage()
+            {
+                Url = "https://w7.pngwing.com/pngs/183/791/png-transparent-blue-like-thumb-up-icon.png",
+                Size = AdaptiveImageSize.Large,
+                Wrap = true,
+                HorizontalAlignment = "center",
+            });
+            feedbackcard.Body.Add(new AdaptiveToggleInput()
+            {
+                Text = this.localizer.GetString("I confirm I read the message content and commit myself to implement it."),
+                IsRequired = true,
+                Wrap = true,
+            });
+            feedbackcard.Body.Add(new AdaptiveSubmitAction()
+            {
+                Title = this.localizer.GetString("Submit"),
+                Type = "invoke"
+                Value = notificationId,
+                Wrap = true,
+            });
+
+            feedbackcard.AdditionalProperties.Add("msteams", new { width = "full" });
+
+            var feedbackCardAttachment = new Attachment()
+            {
+
+                ContentType = AdaptiveCardContentType,
+                Content = feedbackcard;
+        };
+
+            return MessageFactory.Attachment(feedbackCardAttachment);
+        }
+}
 }
