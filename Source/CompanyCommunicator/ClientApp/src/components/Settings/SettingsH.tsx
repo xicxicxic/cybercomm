@@ -332,55 +332,55 @@ function SettingsH(props: ISettingsProps) {
                             </TableRow>
                         ))}
 
-                    <Flex style={{ marginTop: "20px" }} gap="gap.small">
-                        <Flex.Item>
-                            <Button
-                                className="addBtn"
-                                content="Add new image"
-                                icon={<AddIcon></AddIcon>}
-                                onClick={() => addHandler()}
-                            />
-                        </Flex.Item>
-                    </Flex>
+                    {/*<Flex style={{ marginTop: "20px" }} gap="gap.small">*/}
+                    {/*    <Flex.Item>*/}
+                    {/*        <Button*/}
+                    {/*            className="addBtn"*/}
+                    {/*            content="Add new image"*/}
+                    {/*            icon={<AddIcon></AddIcon>}*/}
+                    {/*            onClick={() => addHandler()}*/}
+                    {/*        />*/}
+                    {/*    </Flex.Item>*/}
+                    {/*</Flex>*/}
 
-                    {imageDataList &&
-                        imageDataList.map((image: ImageItem, index: number) => (
-                            <TableRow style={{ backgroundColor: "transparent" }}>
-                                <Input
-                                    fluid
-                                    className="imageTitleInput"
-                                    type="text"
-                                    value={image.name}
-                                    onChange={(e: any) => handleImageNameChange(e, index)}
-                                >
-                                    {" "}
-                                </Input>
-                                <Input
-                                    fluid
-                                    className="imageUrlInput"
-                                    type="text"
-                                    value={image.url}
-                                    onChange={(e: any) => handleImageUrlChange(e, index)}
-                                >
-                                    {" "}
-                                </Input>
-                                <Checkbox
-                                    checked={image.selectedImage}
-                                    toggle
-                                    onChange={(e: any) =>
-                                        handleSelectedImage(!image.selectedImage, index)
-                                    }
-                                ></Checkbox>
-                                <Checkbox checked={image.selectedImage} toggle ></Checkbox>
-                                <Button
-                                    iconOnly
-                                    className="deleteBtn"
-                                    icon={<TrashCanIcon outline />}
-                                    style={{ border: "none", boxShadow: "0 0 0 0" }}
-                                    onClick={() => { deleteImageHandler(index) }}
-                                ></Button>
-                            </TableRow>
-                        ))}
+                    {/*{imageDataList &&*/}
+                    {/*    imageDataList.map((image: ImageItem, index: number) => (*/}
+                    {/*        <TableRow style={{ backgroundColor: "transparent" }}>*/}
+                    {/*            <Input*/}
+                    {/*                fluid*/}
+                    {/*                className="imageTitleInput"*/}
+                    {/*                type="text"*/}
+                    {/*                value={image.name}*/}
+                    {/*                onChange={(e: any) => handleImageNameChange(e, index)}*/}
+                    {/*            >*/}
+                    {/*                {" "}*/}
+                    {/*            </Input>*/}
+                    {/*            <Input*/}
+                    {/*                fluid*/}
+                    {/*                className="imageUrlInput"*/}
+                    {/*                type="text"*/}
+                    {/*                value={image.url}*/}
+                    {/*                onChange={(e: any) => handleImageUrlChange(e, index)}*/}
+                    {/*            >*/}
+                    {/*                {" "}*/}
+                    {/*            </Input>*/}
+                    {/*            <Checkbox checked={image.selectedImage} toggle disabled></Checkbox>*/}
+                    {/*            <Checkbox*/}
+                    {/*                checked={image.selectedImage}*/}
+                    {/*                toggle*/}
+                    {/*                onChange={(e: any) =>*/}
+                    {/*                    handleSelectedImage(!image.selectedImage, index)*/}
+                    {/*                }*/}
+                    {/*            ></Checkbox>*/}
+                    {/*            <Button*/}
+                    {/*                iconOnly*/}
+                    {/*                className="deleteBtn"*/}
+                    {/*                icon={<TrashCanIcon outline />}*/}
+                    {/*                style={{ border: "none", boxShadow: "0 0 0 0" }}*/}
+                    {/*                onClick={() => { deleteImageHandler(index) }}*/}
+                    {/*            ></Button>*/}
+                    {/*        </TableRow>*/}
+                    {/*    ))}*/}
                 </Table>
 
 

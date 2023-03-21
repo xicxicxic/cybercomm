@@ -20,7 +20,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Controllers
     /// Controller for getting groups.
     /// </summary>
     [Route("api/groupData")]
-    //[Authorize(PolicyNames.MustBeValidUpnPolicy)]
+    [Authorize(PolicyNames.MustBeValidUpnPolicy)]
     public class GroupDataController : Controller
     {
         private readonly INotificationDataRepository notificationDataRepository;
